@@ -4536,8 +4536,8 @@ describe Grape::API do
 
     let(:shared_api_module) do
       Module.new do
-        # rubocop:disable Style/ExplicitBlockArgument -- because
-        # this causes the underlying issue in this form
+        # rubocop:disable Style/ExplicitBlockArgument
+        # because this causes the underlying issue in this form
         def uniqe_id_route
           params do
             use :unique_id
