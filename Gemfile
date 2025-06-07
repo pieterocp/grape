@@ -8,9 +8,10 @@ group :development, :test do
   gem 'builder', require: false
   gem 'bundler'
   gem 'rake'
-  gem 'rubocop', '1.76.2', require: false
+  gem 'rubocop', '1.75.5', require: false
   gem 'rubocop-performance', '1.25.0', require: false
   gem 'rubocop-rspec', '3.6.0', require: false
+  gem 'standard', '1.50.0'
 end
 
 group :development do
