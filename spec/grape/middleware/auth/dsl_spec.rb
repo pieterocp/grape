@@ -6,54 +6,54 @@ describe Grape::Middleware::Auth::DSL do
   let(:block) { -> {} }
   let(:settings) do
     {
-      opaque: 'secret',
+      opaque: "secret",
       proc: block,
-      realm: 'API Authorization',
+      realm: "API Authorization",
       type: :http_digest
     }
   end
 
-  describe '.auth' do
-    it 'sets auth parameters' do
+  describe ".auth" do
+    it "sets auth parameters" do
       expect(subject.base_instance).to receive(:use).with(Grape::Middleware::Auth::Base, settings)
 
       subject.auth :http_digest, realm: settings[:realm], opaque: settings[:opaque], &settings[:proc]
       expect(subject.auth).to eq(settings)
     end
 
-    it 'can be called multiple times' do
+    it "can be called multiple times" do
       expect(subject.base_instance).to receive(:use).with(Grape::Middleware::Auth::Base, settings)
-      expect(subject.base_instance).to receive(:use).with(Grape::Middleware::Auth::Base, settings.merge(realm: 'super_secret'))
+      expect(subject.base_instance).to receive(:use).with(Grape::Middleware::Auth::Base, settings.merge(realm: "super_secret"))
 
       subject.auth :http_digest, realm: settings[:realm], opaque: settings[:opaque], &settings[:proc]
       first_settings = subject.auth
 
-      subject.auth :http_digest, realm: 'super_secret', opaque: settings[:opaque], &settings[:proc]
+      subject.auth :http_digest, realm: "super_secret", opaque: settings[:opaque], &settings[:proc]
 
-      expect(subject.auth).to eq(settings.merge(realm: 'super_secret'))
+      expect(subject.auth).to eq(settings.merge(realm: "super_secret"))
       expect(subject.auth.object_id).not_to eq(first_settings.object_id)
     end
   end
 
-  describe '.http_basic' do
-    it 'sets auth parameters' do
-      subject.http_basic realm: 'my_realm', &settings[:proc]
-      expect(subject.auth).to eq(realm: 'my_realm', type: :http_basic, proc: block)
+  describe ".http_basic" do
+    it "sets auth parameters" do
+      subject.http_basic realm: "my_realm", &settings[:proc]
+      expect(subject.auth).to eq(realm: "my_realm", type: :http_basic, proc: block)
     end
   end
 
-  describe '.http_digest' do
-    context 'when realm is a hash' do
-      it 'sets auth parameters' do
-        subject.http_digest realm: { realm: 'my_realm', opaque: 'my_opaque' }, &settings[:proc]
-        expect(subject.auth).to eq(realm: { realm: 'my_realm', opaque: 'my_opaque' }, type: :http_digest, proc: block)
+  describe ".http_digest" do
+    context "when realm is a hash" do
+      it "sets auth parameters" do
+        subject.http_digest realm: {realm: "my_realm", opaque: "my_opaque"}, &settings[:proc]
+        expect(subject.auth).to eq(realm: {realm: "my_realm", opaque: "my_opaque"}, type: :http_digest, proc: block)
       end
     end
 
-    context 'when realm is not hash' do
-      it 'sets auth parameters' do
-        subject.http_digest realm: 'my_realm', opaque: 'my_opaque', &settings[:proc]
-        expect(subject.auth).to eq(realm: 'my_realm', type: :http_digest, proc: block, opaque: 'my_opaque')
+    context "when realm is not hash" do
+      it "sets auth parameters" do
+        subject.http_digest realm: "my_realm", opaque: "my_opaque", &settings[:proc]
+        expect(subject.auth).to eq(realm: "my_realm", type: :http_digest, proc: block, opaque: "my_opaque")
       end
     end
   end

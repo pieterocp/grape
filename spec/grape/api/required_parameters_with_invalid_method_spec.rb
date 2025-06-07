@@ -10,16 +10,16 @@ describe Grape::Endpoint do
   before do
     subject.namespace do
       params do
-        requires :id, desc: 'Identifier.'
+        requires :id, desc: "Identifier."
       end
-      get ':id' do
+      get ":id" do
       end
     end
   end
 
-  context 'post' do
-    it '405' do
-      post '/something'
+  context "post" do
+    it "405" do
+      post "/something"
       expect(last_response.status).to eq 405
     end
   end

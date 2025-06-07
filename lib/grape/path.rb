@@ -3,9 +3,9 @@
 module Grape
   # Represents a path to an endpoint.
   class Path
-    DEFAULT_FORMAT_SEGMENT = '(/.:format)'
-    NO_VERSIONING_WITH_VALID_PATH_FORMAT_SEGMENT = '(.:format)'
-    VERSION_SEGMENT = ':version'
+    DEFAULT_FORMAT_SEGMENT = "(/.:format)"
+    NO_VERSIONING_WITH_VALID_PATH_FORMAT_SEGMENT = "(.:format)"
+    VERSION_SEGMENT = ":version"
 
     attr_reader :origin, :suffix
 
@@ -45,7 +45,7 @@ module Grape
     end
 
     def not_slash?(value)
-      value != '/'
+      value != "/"
     end
 
     def uses_specific_format?(settings)
@@ -68,7 +68,7 @@ module Grape
       def initialize
         super
         @cache = Hash.new do |h, parts|
-          h[parts] = Grape::Router.normalize_path(parts.join('/'))
+          h[parts] = Grape::Router.normalize_path(parts.join("/"))
         end
       end
     end

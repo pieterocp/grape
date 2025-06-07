@@ -40,12 +40,12 @@ module Grape
 
       SPECIAL = {
         ::JSON => Json,
-        Array[JSON] => JsonArray,
+        [JSON] => JsonArray,
         ::File => File,
         Rack::Multipart::UploadedFile => File
       }.freeze
 
-      GROUPS = [Array, Hash, JSON, Array[JSON]].freeze
+      GROUPS = [Array, Hash, JSON, [JSON]].freeze
 
       # Is the given class a primitive type as recognized by Grape?
       #
@@ -199,14 +199,14 @@ module Grape
       end
 
       def cache_key(type, method, strict)
-        [type, method, strict].each_with_object(+'_') do |val, memo|
+        [type, method, strict].each_with_object(+"_") do |val, memo|
           next if val.nil?
 
-          memo << '_' << val.to_s
+          memo << "_" << val.to_s
         end
       end
 
-      instance_variable_set(:@__cache,            {})
+      instance_variable_set(:@__cache, {})
       instance_variable_set(:@__cache_write_lock, Mutex.new)
     end
   end

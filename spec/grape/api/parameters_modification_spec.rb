@@ -10,7 +10,7 @@ describe Grape::Endpoint do
   before do
     subject.namespace :test do
       params do
-        optional :foo, default: +'-abcdef'
+        optional :foo, default: +"-abcdef"
       end
       get do
         params[:foo].slice!(0)
@@ -19,23 +19,23 @@ describe Grape::Endpoint do
     end
   end
 
-  context 'when route modifies param value' do
-    it 'param default should not change' do
-      get '/test'
+  context "when route modifies param value" do
+    it "param default should not change" do
+      get "/test"
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq 'abcdef'
+      expect(last_response.body).to eq "abcdef"
 
-      get '/test'
+      get "/test"
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq 'abcdef'
+      expect(last_response.body).to eq "abcdef"
 
-      get '/test?foo=-123456'
+      get "/test?foo=-123456"
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq '123456'
+      expect(last_response.body).to eq "123456"
 
-      get '/test'
+      get "/test"
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq 'abcdef'
+      expect(last_response.body).to eq "abcdef"
     end
   end
 end

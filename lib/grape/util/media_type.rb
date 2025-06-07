@@ -7,7 +7,7 @@ module Grape
 
       # based on the HTTP Accept header with the pattern:
       # application/vnd.:vendor-:version+:format
-      VENDOR_VERSION_HEADER_REGEX = /\Avnd\.(?<vendor>[a-z0-9.\-_!^]+?)(?:-(?<version>[a-z0-9*.]+))?(?:\+(?<format>[a-z0-9*\-.]+))?\z/.freeze
+      VENDOR_VERSION_HEADER_REGEX = /\Avnd\.(?<vendor>[a-z0-9.\-_!^]+?)(?:-(?<version>[a-z0-9*.]+))?(?:\+(?<format>[a-z0-9*\-.]+))?\z/
 
       def initialize(type:, subtype:)
         @type = type
@@ -44,7 +44,7 @@ module Grape
         def parse(media_type)
           return if media_type.blank?
 
-          type, subtype = media_type.split('/', 2)
+          type, subtype = media_type.split("/", 2)
           return if type.blank? || subtype.blank?
 
           new(type: type, subtype: subtype)
@@ -53,7 +53,7 @@ module Grape
         def match?(media_type)
           return false if media_type.blank?
 
-          subtype = media_type.split('/', 2).last
+          subtype = media_type.split("/", 2).last
           return false if subtype.blank?
 
           VENDOR_VERSION_HEADER_REGEX.match?(subtype)

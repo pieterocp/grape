@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 describe Grape::Exceptions::UnknownValidator do
-  describe '#message' do
+  describe "#message" do
     let(:error) do
-      described_class.new('gt_10')
+      described_class.new("gt_10")
     end
 
-    it 'contains the problem in the message' do
+    it "contains the problem in the message" do
       expect(error.message).to include(
-        'unknown validator: gt_10'
+        "unknown validator: gt_10"
       )
     end
   end

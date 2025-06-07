@@ -11,13 +11,13 @@ describe Grape::DSL::Logger do
 
   let(:logger) { instance_double(Logger) }
 
-  describe '.logger' do
-    it 'sets a logger' do
+  describe ".logger" do
+    it "sets a logger" do
       subject.logger logger
       expect(subject.logger).to eq logger
     end
 
-    it 'returns a logger' do
+    it "returns a logger" do
       expect(subject.logger(logger)).to eq logger
     end
   end

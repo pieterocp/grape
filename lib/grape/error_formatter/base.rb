@@ -32,15 +32,17 @@ module Grape
             # the Endpoint does not have a valid env at this moment
             http_codes = env[Grape::Env::GRAPE_ROUTING_ARGS][:route_info].http_codes || []
 
-            found_code = http_codes.find do |http_code|
-              (http_code[0].to_i == env[Grape::Env::API_ENDPOINT].status) && http_code[2].respond_to?(:represent)
-            end if env[Grape::Env::API_ENDPOINT].request
+            if env[Grape::Env::API_ENDPOINT].request
+              found_code = http_codes.find do |http_code|
+                (http_code[0].to_i == env[Grape::Env::API_ENDPOINT].status) && http_code[2].respond_to?(:represent)
+              end
+            end
 
             presenter = found_code[2] if found_code
           end
 
           if presenter
-            embeds = { env: env }
+            embeds = {env: env}
             embeds[:version] = env[Grape::Env::API_VERSION] if env.key?(Grape::Env::API_VERSION)
             presented_message = presenter.represent(presented_message, embeds).serializable_hash
           end
@@ -51,7 +53,7 @@ module Grape
         def wrap_message(message)
           return message if message.is_a?(Hash)
 
-          { message: message }
+          {message: message}
         end
 
         def format_structured_message(_structured_message)

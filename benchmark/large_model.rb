@@ -2,9 +2,9 @@
 
 # gem 'grape', '=1.0.1'
 
-require 'grape'
-require 'ruby-prof'
-require 'hashie'
+require "grape"
+require "ruby-prof"
+require "hashie"
 
 class API < Grape::API
   # include Grape::Extensions::Hash::ParamBuilder
@@ -15,8 +15,8 @@ class API < Grape::API
   end
 
   prefix :api
-  version 'v1', using: :path
-  content_type :json, 'application/json; charset=UTF-8'
+  version "v1", using: :path
+  content_type :json, "application/json; charset=UTF-8"
   default_format :json
 
   def self.vrp_request_timewindow(this)
@@ -51,7 +51,7 @@ class API < Grape::API
     this.optional(:additional_value, type: Integer)
     this.optional(:setup_duration, types: [String, Float, Integer])
     this.optional(:late_multiplier, type: Float)
-    this.optional(:timewindow_start_day_shift_number, documentation: { hidden: true }, type: Integer)
+    this.optional(:timewindow_start_day_shift_number, documentation: {hidden: true}, type: Integer)
     this.requires(:point_id, type: String, allow_blank: false)
     this.optional(:timewindows, type: Array) do
       API.vrp_request_timewindow(self)
@@ -79,9 +79,9 @@ class API < Grape::API
     this.optional(:cost_time_multiplier, type: Float)
 
     this.optional :router_dimension, type: String, values: %w[time distance]
-    this.optional(:skills, type: Array[Array[String]], coerce_with: ->(val) { val.is_a?(String) ? [val.split(',').map(&:strip)] : val })
+    this.optional(:skills, type: [[String]], coerce_with: ->(val) { val.is_a?(String) ? [val.split(",").map(&:strip)] : val })
 
-    this.optional(:unavailable_work_day_indices, type: Array[Integer])
+    this.optional(:unavailable_work_day_indices, type: [Integer])
 
     this.optional(:free_approach, type: Boolean)
     this.optional(:free_return, type: Boolean)
@@ -104,14 +104,14 @@ class API < Grape::API
 
     this.optional(:visits_number, type: Integer, coerce_with: ->(val) { val.to_i.positive? && val.to_i }, default: 1, allow_blank: false)
 
-    this.optional(:unavailable_visit_indices, type: Array[Integer])
-    this.optional(:unavailable_visit_day_indices, type: Array[Integer])
+    this.optional(:unavailable_visit_indices, type: [Integer])
+    this.optional(:unavailable_visit_day_indices, type: [Integer])
 
     this.optional(:minimum_lapse, type: Float)
     this.optional(:maximum_lapse, type: Float)
 
-    this.optional(:sticky_vehicle_ids, type: Array[String])
-    this.optional(:skills, type: Array[String])
+    this.optional(:sticky_vehicle_ids, type: [String])
+    this.optional(:skills, type: [String])
 
     this.optional(:type, type: Symbol)
     this.optional(:activity, type: Hash) do
@@ -146,9 +146,9 @@ class API < Grape::API
 
   def self.vrp_request_preprocessing(this)
     this.optional(:max_split_size, type: Integer)
-    this.optional(:partition_method, type: String, documentation: { hidden: true })
-    this.optional(:partition_metric, type: Symbol, documentation: { hidden: true })
-    this.optional(:kmeans_centroids, type: Array[Integer])
+    this.optional(:partition_method, type: String, documentation: {hidden: true})
+    this.optional(:partition_metric, type: Symbol, documentation: {hidden: true})
+    this.optional(:kmeans_centroids, type: [Integer])
     this.optional(:cluster_threshold, type: Float)
     this.optional(:force_cluster, type: Boolean)
     this.optional(:prefer_short_segment, type: Boolean)
@@ -156,7 +156,7 @@ class API < Grape::API
     this.optional(:partitions, type: Array) do
       API.vrp_request_partition(self)
     end
-    this.optional(:first_solution_strategy, type: Array[String])
+    this.optional(:first_solution_strategy, type: [String])
   end
 
   def self.vrp_request_resolution(this)
@@ -165,11 +165,11 @@ class API < Grape::API
     this.optional(:iterations_without_improvment, type: Integer, allow_blank: false)
     this.optional(:stable_iterations, type: Integer, allow_blank: false)
     this.optional(:stable_coefficient, type: Float, allow_blank: false)
-    this.optional(:initial_time_out, type: Integer, allow_blank: false, documentation: { hidden: true })
+    this.optional(:initial_time_out, type: Integer, allow_blank: false, documentation: {hidden: true})
     this.optional(:minimum_duration, type: Integer, allow_blank: false)
     this.optional(:time_out_multiplier, type: Integer)
     this.optional(:vehicle_limit, type: Integer)
-    this.optional(:solver_parameter, type: Integer, documentation: { hidden: true })
+    this.optional(:solver_parameter, type: Integer, documentation: {hidden: true})
     this.optional(:solver, type: Boolean, default: true)
     this.optional(:same_point_day, type: Boolean)
     this.optional(:allow_partial_assignment, type: Boolean, default: true)
@@ -178,7 +178,7 @@ class API < Grape::API
     this.optional(:several_solutions, type: Integer, allow_blank: false, default: 1)
     this.optional(:batch_heuristic, type: Boolean, default: false)
     this.optional(:variation_ratio, type: Integer)
-    this.optional(:repetition, type: Integer, documentation: { hidden: true })
+    this.optional(:repetition, type: Integer, documentation: {hidden: true})
     this.at_least_one_of :duration, :iterations, :iterations_without_improvment, :stable_iterations, :stable_coefficient, :initial_time_out, :minimum_duration
     this.mutually_exclusive :initial_time_out, :minimum_duration
   end
@@ -195,11 +195,11 @@ class API < Grape::API
     this.optional(:range_indices, type: Hash) do
       API.vrp_request_indice_range(self)
     end
-    this.optional(:unavailable_indices, type: Array[Integer])
+    this.optional(:unavailable_indices, type: [Integer])
   end
 
   params do
-    optional(:vrp, type: Hash, documentation: { param_type: 'body' }) do
+    optional(:vrp, type: Hash, documentation: {param_type: "body"}) do
       optional(:name, type: String)
 
       optional(:points, type: Array) do
@@ -223,7 +223,7 @@ class API < Grape::API
       end
     end
   end
-  post '/' do
+  post "/" do
     {
       skills_v1: params[:vrp][:vehicles].first[:skills],
       skills_v2: params[:vrp][:vehicles].last[:skills]
@@ -234,10 +234,10 @@ puts Grape::VERSION
 
 options = {
   method: Rack::POST,
-  params: JSON.parse(File.read('benchmark/resource/vrp_example.json'))
+  params: JSON.parse(File.read("benchmark/resource/vrp_example.json"))
 }
 
-env = Rack::MockRequest.env_for('/api/v1', options)
+env = Rack::MockRequest.env_for("/api/v1", options)
 
 start = Time.now
 result = RubyProf.profile do
@@ -246,4 +246,4 @@ result = RubyProf.profile do
 end
 puts Time.now - start
 printer = RubyProf::FlatPrinter.new(result)
-File.open('test_prof.out', 'w+') { |f| printer.print(f, {}) }
+File.open("test_prof.out", "w+") { |f| printer.print(f, {}) }

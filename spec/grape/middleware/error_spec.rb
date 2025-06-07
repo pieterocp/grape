@@ -7,7 +7,7 @@ describe Grape::Middleware::Error do
       expose :static
 
       def static
-        'static text'
+        "static text"
       end
     end
   end
@@ -22,7 +22,7 @@ describe Grape::Middleware::Error do
       end
     end
   end
-  let(:options) { { default_message: 'Aww, hamburgers.' } }
+  let(:options) { {default_message: "Aww, hamburgers."} }
 
   let(:app) do
     opts = options
@@ -34,44 +34,44 @@ describe Grape::Middleware::Error do
     end
   end
 
-  it 'sets the status code appropriately' do
-    err_app.error = { status: 410 }
-    get '/'
+  it "sets the status code appropriately" do
+    err_app.error = {status: 410}
+    get "/"
     expect(last_response.status).to eq(410)
   end
 
-  it 'sets the status code based on the rack util status code symbol' do
-    err_app.error = { status: :gone }
-    get '/'
+  it "sets the status code based on the rack util status code symbol" do
+    err_app.error = {status: :gone}
+    get "/"
     expect(last_response.status).to eq(410)
   end
 
-  it 'sets the error message appropriately' do
-    err_app.error = { message: 'Awesome stuff.' }
-    get '/'
-    expect(last_response.body).to eq('Awesome stuff.')
+  it "sets the error message appropriately" do
+    err_app.error = {message: "Awesome stuff."}
+    get "/"
+    expect(last_response.body).to eq("Awesome stuff.")
   end
 
-  it 'defaults to a 500 status' do
+  it "defaults to a 500 status" do
     err_app.error = {}
-    get '/'
+    get "/"
     expect(last_response).to be_server_error
   end
 
-  it 'has a default message' do
+  it "has a default message" do
     err_app.error = {}
-    get '/'
-    expect(last_response.body).to eq('Aww, hamburgers.')
+    get "/"
+    expect(last_response.body).to eq("Aww, hamburgers.")
   end
 
-  context 'with http code' do
-    let(:options) {  { default_message: 'Aww, hamburgers.' } }
+  context "with http code" do
+    let(:options) { {default_message: "Aww, hamburgers."} }
 
-    it 'adds the status code if wanted' do
-      err_app.error = { message: { code: 200 } }
-      get '/'
+    it "adds the status code if wanted" do
+      err_app.error = {message: {code: 200}}
+      get "/"
 
-      expect(last_response.body).to eq({ code: 200 }.to_json)
+      expect(last_response.body).to eq({code: 200}.to_json)
     end
   end
 end

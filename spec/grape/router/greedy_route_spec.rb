@@ -5,31 +5,31 @@ RSpec.describe Grape::Router::GreedyRoute do
   let(:index) { 0 }
   let(:pattern) { :pattern }
   let(:params) do
-    { a_param: 1 }.freeze
+    {a_param: 1}.freeze
   end
   let(:options) do
-    { params: params }.freeze
+    {params: params}.freeze
   end
 
-  describe '#pattern' do
+  describe "#pattern" do
     subject { instance.pattern }
 
     it { is_expected.to eq(pattern) }
   end
 
-  describe '#options' do
+  describe "#options" do
     subject { instance.options }
 
     it { is_expected.to eq(options) }
   end
 
-  describe '#params' do
+  describe "#params" do
     subject { instance.params }
 
     it { is_expected.to eq(params) }
   end
 
-  describe '#attributes' do
+  describe "#attributes" do
     subject { instance.attributes }
 
     it { is_expected.to eq(options) }

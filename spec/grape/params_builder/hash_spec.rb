@@ -7,8 +7,8 @@ describe Grape::ParamsBuilder::Hash do
     Class.new(Grape::API)
   end
 
-  describe 'in an endpoint' do
-    describe '#params' do
+  describe "in an endpoint" do
+    describe "#params" do
       before do
         subject.params do
           build_with :hash
@@ -19,34 +19,34 @@ describe Grape::ParamsBuilder::Hash do
         end
       end
 
-      it 'is of type Hash' do
-        get '/'
+      it "is of type Hash" do
+        get "/"
         expect(last_response.status).to eq(200)
-        expect(last_response.body).to eq('Hash')
+        expect(last_response.body).to eq("Hash")
       end
     end
   end
 
-  describe 'in an api' do
+  describe "in an api" do
     before do
       subject.build_with :hash
     end
 
-    describe '#params' do
+    describe "#params" do
       before do
         subject.get do
           params.class
         end
       end
 
-      it 'is Hash' do
-        get '/'
+      it "is Hash" do
+        get "/"
         expect(last_response.status).to eq(200)
-        expect(last_response.body).to eq('Hash')
+        expect(last_response.body).to eq("Hash")
       end
     end
 
-    it 'symbolizes params keys' do
+    it "symbolizes params keys" do
       subject.params do
         optional :a, type: Hash do
           optional :b, type: Hash do
@@ -56,43 +56,43 @@ describe Grape::ParamsBuilder::Hash do
         end
       end
 
-      subject.get '/foo' do
+      subject.get "/foo" do
         [params[:a][:b][:c], params[:a][:d]]
       end
 
-      get '/foo', 'a' => { b: { c: 'bar' }, 'd' => ['foo'] }
+      get "/foo", "a" => {:b => {c: "bar"}, "d" => ["foo"]}
       expect(last_response.status).to eq(200)
       expect(last_response.body).to eq('["bar", ["foo"]]')
     end
 
-    it 'symbolizes the params' do
+    it "symbolizes the params" do
       subject.params do
         build_with :hash
         requires :a, type: String
       end
 
-      subject.get '/foo' do
-        [params[:a], params['a']]
+      subject.get "/foo" do
+        [params[:a], params["a"]]
       end
 
-      get '/foo', a: 'bar'
+      get "/foo", a: "bar"
       expect(last_response.status).to eq(200)
       expect(last_response.body).to eq('["bar", nil]')
     end
 
-    it 'does not overwrite route_param with a regular param if they have same name' do
+    it "does not overwrite route_param with a regular param if they have same name" do
       subject.namespace :route_param do
         route_param :foo do
           get { params.to_json }
         end
       end
 
-      get '/route_param/bar', foo: 'baz'
+      get "/route_param/bar", foo: "baz"
       expect(last_response.status).to eq(200)
       expect(last_response.body).to eq('{"foo":"bar"}')
     end
 
-    it 'does not overwrite route_param with a defined regular param if they have same name' do
+    it "does not overwrite route_param with a defined regular param if they have same name" do
       subject.namespace :route_param do
         params do
           requires :foo, type: String
@@ -104,9 +104,9 @@ describe Grape::ParamsBuilder::Hash do
         end
       end
 
-      get '/route_param/bar', foo: 'baz'
+      get "/route_param/bar", foo: "baz"
       expect(last_response.status).to eq(200)
-      expect(last_response.body).to eq('bar')
+      expect(last_response.body).to eq("bar")
     end
   end
 end

@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
-require 'shared/deprecated_class_examples'
+require "shared/deprecated_class_examples"
 
 describe Grape::Validations do
-  describe 'Grape::Validations::Base' do
+  describe "Grape::Validations::Base" do
     let(:deprecated_class) do
       Class.new(Grape::Validations::Base)
     end
 
-    it_behaves_like 'deprecated class'
+    it_behaves_like "deprecated class"
   end
 
-  describe 'using a custom length validator' do
+  describe "using a custom length validator" do
     subject do
       Class.new(Grape::API) do
         params do
           requires :text, default_length: 140
         end
         get do
-          'bacon'
+          "bacon"
         end
       end
     end
@@ -36,7 +36,7 @@ describe Grape::Validations do
     let(:app) { subject }
 
     before do
-      stub_const('DefaultLengthValidator', default_length_validator)
+      stub_const("DefaultLengthValidator", default_length_validator)
       described_class.register(DefaultLengthValidator)
     end
 
@@ -44,33 +44,33 @@ describe Grape::Validations do
       described_class.deregister(:default_length)
     end
 
-    it 'under 140 characters' do
-      get '/', text: 'abc'
+    it "under 140 characters" do
+      get "/", text: "abc"
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq 'bacon'
+      expect(last_response.body).to eq "bacon"
     end
 
-    it 'over 140 characters' do
-      get '/', text: 'a' * 141
+    it "over 140 characters" do
+      get "/", text: "a" * 141
       expect(last_response.status).to eq 400
-      expect(last_response.body).to eq 'text must be at the most 140 characters long'
+      expect(last_response.body).to eq "text must be at the most 140 characters long"
     end
 
-    it 'specified in the query string' do
-      get '/', text: 'a' * 141, max: 141
+    it "specified in the query string" do
+      get "/", text: "a" * 141, max: 141
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq 'bacon'
+      expect(last_response.body).to eq "bacon"
     end
   end
 
-  describe 'using a custom body-only validator' do
+  describe "using a custom body-only validator" do
     subject do
       Class.new(Grape::API) do
         params do
           requires :text, in_body: true
         end
         get do
-          'bacon'
+          "bacon"
         end
       end
     end
@@ -85,7 +85,7 @@ describe Grape::Validations do
     let(:app) { subject }
 
     before do
-      stub_const('InBodyValidator', in_body_validator)
+      stub_const("InBodyValidator", in_body_validator)
       described_class.register(InBodyValidator)
     end
 
@@ -93,27 +93,27 @@ describe Grape::Validations do
       described_class.deregister(:in_body)
     end
 
-    it 'allows field in body' do
-      get '/', text: 'abc'
+    it "allows field in body" do
+      get "/", text: "abc"
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq 'bacon'
+      expect(last_response.body).to eq "bacon"
     end
 
-    it 'ignores field in query' do
-      get '/', nil, text: 'abc'
+    it "ignores field in query" do
+      get "/", nil, text: "abc"
       expect(last_response.status).to eq 400
-      expect(last_response.body).to eq 'text is missing'
+      expect(last_response.body).to eq "text is missing"
     end
   end
 
-  describe 'using a custom validator with message_key' do
+  describe "using a custom validator with message_key" do
     subject do
       Class.new(Grape::API) do
         params do
           requires :text, with_message_key: true
         end
         get do
-          'bacon'
+          "bacon"
         end
       end
     end
@@ -128,7 +128,7 @@ describe Grape::Validations do
     let(:app) { subject }
 
     before do
-      stub_const('WithMessageKeyValidator', message_key_validator)
+      stub_const("WithMessageKeyValidator", message_key_validator)
       described_class.register(WithMessageKeyValidator)
     end
 
@@ -136,14 +136,14 @@ describe Grape::Validations do
       described_class.deregister(:with_message_key)
     end
 
-    it 'fails with message' do
-      get '/', text: 'foobar'
+    it "fails with message" do
+      get "/", text: "foobar"
       expect(last_response.status).to eq 400
-      expect(last_response.body).to eq 'text is missing'
+      expect(last_response.body).to eq "text is missing"
     end
   end
 
-  describe 'using a custom request/param validator' do
+  describe "using a custom request/param validator" do
     subject do
       Class.new(Grape::API) do
         params do
@@ -152,7 +152,7 @@ describe Grape::Validations do
           optional :admin_false_field, type: String, admin: false
         end
         get do
-          'bacon'
+          "bacon"
         end
       end
     end
@@ -168,20 +168,20 @@ describe Grape::Validations do
 
           # check if user is admin or not
           # as an example get a token from request and check if it's admin or not
-          raise Grape::Exceptions::Validation.new(params: @attrs, message: 'Can not set Admin only field.') unless request.headers[access_header] == 'admin'
+          raise Grape::Exceptions::Validation.new(params: @attrs, message: "Can not set Admin only field.") unless request.headers[access_header] == "admin"
         end
 
         def access_header
-          'x-access-token'
+          "x-access-token"
         end
       end
     end
 
     let(:app) { subject }
-    let(:x_access_token_header) { 'x-access-token' }
+    let(:x_access_token_header) { "x-access-token" }
 
     before do
-      stub_const('AdminValidator', admin_validator)
+      stub_const("AdminValidator", admin_validator)
       described_class.register(AdminValidator)
     end
 
@@ -189,46 +189,46 @@ describe Grape::Validations do
       described_class.deregister(:admin)
     end
 
-    it 'fail when non-admin user sets an admin field' do
-      get '/', admin_field: 'tester', non_admin_field: 'toaster'
+    it "fail when non-admin user sets an admin field" do
+      get "/", admin_field: "tester", non_admin_field: "toaster"
       expect(last_response.status).to eq 400
-      expect(last_response.body).to include 'Can not set Admin only field.'
+      expect(last_response.body).to include "Can not set Admin only field."
     end
 
-    it 'does not fail when we send non-admin fields only' do
-      get '/', non_admin_field: 'toaster'
+    it "does not fail when we send non-admin fields only" do
+      get "/", non_admin_field: "toaster"
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq 'bacon'
+      expect(last_response.body).to eq "bacon"
     end
 
-    it 'does not fail when we send non-admin and admin=false fields only' do
-      get '/', non_admin_field: 'toaster', admin_false_field: 'test'
+    it "does not fail when we send non-admin and admin=false fields only" do
+      get "/", non_admin_field: "toaster", admin_false_field: "test"
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq 'bacon'
+      expect(last_response.body).to eq "bacon"
     end
 
-    it 'does not fail when we send admin fields and we are admin' do
-      header x_access_token_header, 'admin'
-      get '/', admin_field: 'tester', non_admin_field: 'toaster', admin_false_field: 'test'
+    it "does not fail when we send admin fields and we are admin" do
+      header x_access_token_header, "admin"
+      get "/", admin_field: "tester", non_admin_field: "toaster", admin_false_field: "test"
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq 'bacon'
+      expect(last_response.body).to eq "bacon"
     end
 
-    it 'fails when we send admin fields and we are not admin' do
-      header x_access_token_header, 'user'
-      get '/', admin_field: 'tester', non_admin_field: 'toaster', admin_false_field: 'test'
+    it "fails when we send admin fields and we are not admin" do
+      header x_access_token_header, "user"
+      get "/", admin_field: "tester", non_admin_field: "toaster", admin_false_field: "test"
       expect(last_response.status).to eq 400
-      expect(last_response.body).to include 'Can not set Admin only field.'
+      expect(last_response.body).to include "Can not set Admin only field."
     end
   end
 
-  describe 'using a custom validator with instance variable' do
+  describe "using a custom validator with instance variable" do
     let(:validator_type) do
       Class.new(Grape::Validations::Validators::Base) do
         def validate_param!(_attr_name, _params)
           if instance_variable_defined?(:@instance_variable) && @instance_variable
-            raise Grape::Exceptions::Validation.new(params: ['params'],
-                                                    message: 'This should never happen')
+            raise Grape::Exceptions::Validation.new(params: ["params"],
+              message: "This should never happen")
           end
           @instance_variable = true
         end
@@ -241,13 +241,13 @@ describe Grape::Validations do
           optional :another_param_to_validate, instance_validator: true
         end
         get do
-          'noop'
+          "noop"
         end
       end
     end
 
     before do
-      stub_const('InstanceValidatorValidator', validator_type)
+      stub_const("InstanceValidatorValidator", validator_type)
       described_class.register(InstanceValidatorValidator)
     end
 
@@ -255,9 +255,9 @@ describe Grape::Validations do
       described_class.deregister(:instance_validator)
     end
 
-    it 'passes validation every time' do
+    it "passes validation every time" do
       expect(validator_type).to receive(:new).twice.and_call_original
-      get '/', param_to_validate: 'value', another_param_to_validate: 'value'
+      get "/", param_to_validate: "value", another_param_to_validate: "value"
       expect(last_response.status).to eq 200
     end
   end

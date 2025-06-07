@@ -6,7 +6,7 @@ class FileStreamer
   end
 
   def each(&blk)
-    File.open(@file_path, 'rb') do |file|
+    File.open(@file_path, "rb") do |file|
       file.each(10, &blk)
     end
   end

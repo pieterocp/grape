@@ -32,7 +32,7 @@ module Grape
         private
 
         def check_values?(val, attr_name)
-          values = @values.is_a?(Proc) && @values.arity.zero? ? @values.call : @values
+          values = (@values.is_a?(Proc) && @values.arity.zero?) ? @values.call : @values
           return true if values.nil?
 
           param_array = val.nil? ? [nil] : Array.wrap(val)
@@ -40,7 +40,7 @@ module Grape
 
           begin
             param_array.all? { |param| values.call(param) }
-          rescue StandardError => e
+          rescue => e
             warn "Error '#{e}' raised while validating attribute '#{attr_name}'"
             false
           end

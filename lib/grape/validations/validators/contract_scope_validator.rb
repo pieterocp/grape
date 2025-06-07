@@ -31,7 +31,7 @@ module Grape
         def build_errors_from_messages(messages)
           messages.map do |message|
             full_name = message.path.first.to_s
-            full_name << "[#{message.path[1..].join('][')}]" if message.path.size > 1
+            full_name << "[#{message.path[1..].join("][")}]" if message.path.size > 1
             Grape::Exceptions::Validation.new(params: [full_name], message: message.text)
           end
         end

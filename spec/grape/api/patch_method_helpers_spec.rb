@@ -4,16 +4,17 @@ describe Grape::API::Helpers do
   let(:patch_public) do
     Class.new(Grape::API) do
       format :json
-      version 'public-v1', using: :header, vendor: 'grape'
+      version "public-v1", using: :header, vendor: "grape"
 
       get do
-        { ok: 'public' }
+        {ok: "public"}
       end
     end
   end
   let(:auth_methods) do
     Module.new do
-      def authenticate!; end
+      def authenticate!
+      end
     end
   end
   let(:patch_private) do
@@ -21,7 +22,7 @@ describe Grape::API::Helpers do
 
     Class.new(Grape::API) do
       format :json
-      version 'private-v1', using: :header, vendor: 'grape'
+      version "private-v1", using: :header, vendor: "grape"
 
       helpers context.auth_methods
 
@@ -30,7 +31,7 @@ describe Grape::API::Helpers do
       end
 
       get do
-        { ok: 'private' }
+        {ok: "private"}
       end
     end
   end
@@ -47,40 +48,40 @@ describe Grape::API::Helpers do
     main
   end
 
-  context 'patch' do
-    it 'public' do
-      patch '/', {}, 'HTTP_ACCEPT' => 'application/vnd.grape-public-v1+json'
+  context "patch" do
+    it "public" do
+      patch "/", {}, "HTTP_ACCEPT" => "application/vnd.grape-public-v1+json"
       expect(last_response.status).to eq 405
     end
 
-    it 'private' do
-      patch '/', {}, 'HTTP_ACCEPT' => 'application/vnd.grape-private-v1+json'
+    it "private" do
+      patch "/", {}, "HTTP_ACCEPT" => "application/vnd.grape-private-v1+json"
       expect(last_response.status).to eq 405
     end
 
-    it 'default' do
-      patch '/'
+    it "default" do
+      patch "/"
       expect(last_response.status).to eq 405
     end
   end
 
-  context 'default' do
-    it 'public' do
-      get '/', {}, 'HTTP_ACCEPT' => 'application/vnd.grape-public-v1+json'
+  context "default" do
+    it "public" do
+      get "/", {}, "HTTP_ACCEPT" => "application/vnd.grape-public-v1+json"
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq({ ok: 'public' }.to_json)
+      expect(last_response.body).to eq({ok: "public"}.to_json)
     end
 
-    it 'private' do
-      get '/', {}, 'HTTP_ACCEPT' => 'application/vnd.grape-private-v1+json'
+    it "private" do
+      get "/", {}, "HTTP_ACCEPT" => "application/vnd.grape-private-v1+json"
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq({ ok: 'private' }.to_json)
+      expect(last_response.body).to eq({ok: "private"}.to_json)
     end
 
-    it 'default' do
-      get '/'
+    it "default" do
+      get "/"
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq({ ok: 'public' }.to_json)
+      expect(last_response.body).to eq({ok: "public"}.to_json)
     end
   end
 end

@@ -82,7 +82,7 @@ module Grape
               config_class.settings
             end
           else
-            options&.merge(description: description) || { description: description }
+            options&.merge(description: description) || {description: description}
           end
 
         namespace_setting :description, opts

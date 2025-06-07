@@ -38,7 +38,7 @@ module Grape
       def inherited(api)
         super
 
-        api.initial_setup(self == Grape::API ? Grape::API::Instance : @base_instance)
+        api.initial_setup((self == Grape::API) ? Grape::API::Instance : @base_instance)
         api.override_all_methods!
       end
 

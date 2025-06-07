@@ -15,7 +15,7 @@ module Grape
           @header ||= Grape::Util::Header.new
         end
       end
-      alias headers header
+      alias_method :headers, :header
     end
   end
 end

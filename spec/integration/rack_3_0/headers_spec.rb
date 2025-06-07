@@ -3,75 +3,75 @@
 describe Grape::API do
   subject { last_response.headers }
 
-  describe 'returned headers should all be in lowercase' do
-    context 'when setting an header in an API' do
+  describe "returned headers should all be in lowercase" do
+    context "when setting an header in an API" do
       let(:app) do
         Class.new(described_class) do
           get do
-            header['GRAPE'] = '1'
+            header["GRAPE"] = "1"
             return_no_content
           end
         end
       end
 
-      before { get '/' }
+      before { get "/" }
 
-      it { is_expected.to include('grape' => '1') }
+      it { is_expected.to include("grape" => "1") }
     end
 
-    context 'when error!' do
+    context "when error!" do
       let(:app) do
         Class.new(described_class) do
           rescue_from ArgumentError do
-            error!('error!', 500, { 'GRAPE' => '1' })
+            error!("error!", 500, {"GRAPE" => "1"})
           end
 
           get { raise ArgumentError }
         end
       end
 
-      before { get '/' }
+      before { get "/" }
 
-      it { is_expected.to include('grape' => '1') }
+      it { is_expected.to include("grape" => "1") }
     end
 
-    context 'when redirect' do
+    context "when redirect" do
       let(:app) do
         Class.new(described_class) do
           get do
-            redirect 'https://www.ruby-grape.org/'
+            redirect "https://www.ruby-grape.org/"
           end
         end
       end
 
-      before { get '/' }
+      before { get "/" }
 
-      it { is_expected.to include('location' => 'https://www.ruby-grape.org/') }
+      it { is_expected.to include("location" => "https://www.ruby-grape.org/") }
     end
 
-    context 'when options' do
+    context "when options" do
       let(:app) do
         Class.new(described_class) do
           get { return_no_content }
         end
       end
 
-      before { options '/' }
+      before { options "/" }
 
-      it { is_expected.to include('allow' => 'OPTIONS, GET, HEAD') }
+      it { is_expected.to include("allow" => "OPTIONS, GET, HEAD") }
     end
 
-    context 'when cascade' do
+    context "when cascade" do
       let(:app) do
         Class.new(described_class) do
-          version 'v0', using: :path, cascade: true
+          version "v0", using: :path, cascade: true
           get { return_no_content }
         end
       end
 
-      before { get '/v1' }
+      before { get "/v1" }
 
-      it { is_expected.to include('x-cascade' => 'pass') }
+      it { is_expected.to include("x-cascade" => "pass") }
     end
   end
 end

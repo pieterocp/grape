@@ -24,7 +24,7 @@ module Grape
 
         validator_options = {
           validator_class: Grape::Validations.require_validator(:contract_scope),
-          opts: { schema: contract, fail_fast: false }
+          opts: {schema: contract, fail_fast: false}
         }
 
         api.namespace_stackable(:validations, validator_options)

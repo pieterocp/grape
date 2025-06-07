@@ -5,11 +5,11 @@ module Grape
     module Versioner
       class Base < Grape::Middleware::Base
         DEFAULT_OPTIONS = {
-          pattern: /.*/i.freeze,
+          pattern: /.*/i,
           version_options: {
             strict: false,
             cascade: true,
-            parameter: 'apiver'
+            parameter: "apiver"
           }.freeze
         }.freeze
 
@@ -58,7 +58,7 @@ module Grape
         end
 
         def error_headers
-          cascade? ? { 'X-Cascade' => 'pass' } : {}
+          cascade? ? {"X-Cascade" => "pass"} : {}
         end
 
         def potential_version_match?(potential_version)
@@ -66,7 +66,7 @@ module Grape
         end
 
         def version_not_found!
-          throw :error, status: 404, message: '404 API Version Not Found', headers: { 'X-Cascade' => 'pass' }
+          throw :error, status: 404, message: "404 API Version Not Found", headers: {"X-Cascade" => "pass"}
         end
       end
     end

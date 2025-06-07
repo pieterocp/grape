@@ -8,10 +8,10 @@ module Grape
           super
 
           @converter = if type.is_a?(Grape::Validations::Types::VariantCollectionCoercer)
-                         type
-                       else
-                         Types.build_coercer(type, method: @option[:method])
-                       end
+            type
+          else
+            Types.build_coercer(type, method: @option[:method])
+          end
         end
 
         def validate_param!(attr_name, params)
@@ -52,7 +52,7 @@ module Grape
         def coerce_value(val)
           converter.call(val)
           # Some custom types might fail, so it should be treated as an invalid value
-        rescue StandardError
+        rescue
           Types::InvalidValue.new
         end
 

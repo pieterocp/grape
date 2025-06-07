@@ -15,7 +15,7 @@ module Grape
     def build_short_name(klass)
       return if klass.name.blank?
 
-      klass.name.demodulize.underscore.delete_suffix('_validator')
+      klass.name.demodulize.underscore.delete_suffix("_validator")
     end
   end
 end

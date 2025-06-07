@@ -27,7 +27,7 @@ module Grape
         ensure
           begin
             after_response = after
-          rescue StandardError => e
+          rescue => e
             warn "caught error of type #{e.class} in after callback inside #{self.class.name} : #{e.message}"
             raise e
           end
@@ -40,12 +40,14 @@ module Grape
 
       # @abstract
       # Called before the application is called in the middleware lifecycle.
-      def before; end
+      def before
+      end
 
       # @abstract
       # Called after the application is called in the middleware lifecycle.
       # @return [Response, nil] a Rack SPEC response or nil to call the application afterwards.
-      def after; end
+      def after
+      end
 
       def rack_request
         @rack_request ||= Rack::Request.new(env)
@@ -74,7 +76,7 @@ module Grape
       end
 
       def content_type
-        content_type_for(env[Grape::Env::API_FORMAT] || options[:format]) || 'text/html'
+        content_type_for(env[Grape::Env::API_FORMAT] || options[:format]) || "text/html"
       end
 
       def query_params
@@ -92,7 +94,7 @@ module Grape
 
         case response
         when Rack::Response then response.headers.merge!(headers)
-        when Array          then response[1].merge!(headers)
+        when Array then response[1].merge!(headers)
         end
       end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'uri'
+require "uri"
 module Spec
   module Support
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie
@@ -9,9 +9,9 @@ module Spec
 
       def initialize(raw)
         @attributes = raw.split(/;\s*/).flat_map.with_index do |attribute, i|
-          attribute, value = attribute.split('=', 2)
+          attribute, value = attribute.split("=", 2)
           if i.zero?
-            [['name', attribute], ['value', unescape(value)]]
+            [["name", attribute], ["value", unescape(value)]]
           else
             [[attribute.downcase, parse_value(attribute, value)]]
           end
@@ -34,11 +34,11 @@ module Spec
 
       def parse_value(attribute, value)
         case attribute
-        when 'expires'
+        when "expires"
           Time.parse(value)
-        when 'max-age'
+        when "max-age"
           value.to_i
-        when 'secure', 'httponly', 'partitioned'
+        when "secure", "httponly", "partitioned"
           true
         else
           unescape(value)

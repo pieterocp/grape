@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'simplecov'
-require 'rubygems'
-require 'bundler'
+require "simplecov"
+require "rubygems"
+require "bundler"
 Bundler.require :default, :test
 
 Grape.deprecator.behavior = :raise
@@ -16,7 +16,7 @@ end
 Grape.config.lint = true # lint all apis by default
 Grape::Util::Registry.include(Deregister)
 # issue with ruby 2.7 with ^. We need to extend it again
-Grape::Validations.extend(Grape::Util::Registry) if Gem::Version.new(RUBY_VERSION).release < Gem::Version.new('3.0')
+Grape::Validations.extend(Grape::Util::Registry) if Gem::Version.new(RUBY_VERSION).release < Gem::Version.new("3.0")
 
 # The default value for this setting is true in a standard Rails app,
 # so it should be set to true here as well to reflect that.
@@ -32,5 +32,5 @@ RSpec.configure do |config|
   config.before { Grape::Util::InheritableSetting.reset_global! }
 
   # Enable flags like --only-failures and --next-failure
-  config.example_status_persistence_file_path = '.rspec_status'
+  config.example_status_persistence_file_path = ".rspec_status"
 end

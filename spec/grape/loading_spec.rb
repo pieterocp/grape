@@ -6,7 +6,7 @@ describe Grape::API do
 
     Class.new(Grape::API) do
       format :json
-      mount context.combined_api => '/'
+      mount context.combined_api => "/"
     end
   end
 
@@ -39,9 +39,9 @@ describe Grape::API do
     subject
   end
 
-  it 'execute first request in reasonable time' do
+  it "execute first request in reasonable time" do
     started = Time.now
-    get '/mount1/nested/test_method'
+    get "/mount1/nested/test_method"
     expect(Time.now - started).to be < 5
   end
 end

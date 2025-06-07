@@ -36,7 +36,7 @@ module Grape
         else
           # Allow content-type to be explicitly overwritten
           formatter = fetch_formatter(headers, options)
-          bodymap = ActiveSupport::Notifications.instrument('format_response.grape', formatter: formatter, env: env) do
+          bodymap = ActiveSupport::Notifications.instrument("format_response.grape", formatter: formatter, env: env) do
             bodies.collect { |body| formatter.call(body, env) }
           end
           Rack::Response.new(bodymap, status, headers)
@@ -89,15 +89,15 @@ module Grape
             body = (env[Grape::Env::API_REQUEST_BODY] = parser.call(body, env))
             if body.is_a?(Hash)
               env[Rack::RACK_REQUEST_FORM_HASH] = if env.key?(Rack::RACK_REQUEST_FORM_HASH)
-                                                    env[Rack::RACK_REQUEST_FORM_HASH].merge(body)
-                                                  else
-                                                    body
-                                                  end
+                env[Rack::RACK_REQUEST_FORM_HASH].merge(body)
+              else
+                body
+              end
               env[Rack::RACK_REQUEST_FORM_INPUT] = env[Rack::RACK_INPUT]
             end
           rescue Grape::Exceptions::Base => e
             raise e
-          rescue StandardError => e
+          rescue => e
             throw :error, status: 400, message: e.message, backtrace: e.backtrace, original_exception: e
           end
         else
@@ -115,11 +115,11 @@ module Grape
         (rack_request.post? || rack_request.put? || rack_request.patch? || rack_request.delete?) &&
           !(rack_request.form_data? && rack_request.content_type) &&
           !rack_request.parseable_data? &&
-          (rack_request.content_length.to_i.positive? || rack_request.env['HTTP_TRANSFER_ENCODING'] == 'chunked')
+          (rack_request.content_length.to_i.positive? || rack_request.env["HTTP_TRANSFER_ENCODING"] == "chunked")
       end
 
       def negotiate_content_type
-        fmt = format_from_extension || query_params['format'] || options[:format] || format_from_header || options[:default_format]
+        fmt = format_from_extension || query_params["format"] || options[:format] || format_from_header || options[:default_format]
         if content_type_for(fmt)
           env[Grape::Env::API_FORMAT] = fmt.to_sym
         else
@@ -129,7 +129,7 @@ module Grape
 
       def format_from_extension
         request_path = rack_request.path.try(:scrub)
-        dot_pos = request_path.rindex('.')
+        dot_pos = request_path.rindex(".")
         return unless dot_pos
 
         extension = request_path[dot_pos + 1..]
@@ -137,7 +137,7 @@ module Grape
       end
 
       def format_from_header
-        accept_header = env['HTTP_ACCEPT'].try(:scrub)
+        accept_header = env["HTTP_ACCEPT"].try(:scrub)
         return if accept_header.blank?
 
         media_type = Rack::Utils.best_q_match(accept_header, mime_types.keys)

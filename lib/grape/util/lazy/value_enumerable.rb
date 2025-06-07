@@ -20,13 +20,13 @@ module Grape
 
         def []=(key, value)
           @value_hash[key] = case value
-                             when Hash
-                               ValueHash.new(value)
-                             when Array
-                               ValueArray.new(value)
-                             else
-                               Value.new(value)
-                             end
+          when Hash
+            ValueHash.new(value)
+          when Array
+            ValueArray.new(value)
+          else
+            Value.new(value)
+          end
         end
       end
     end

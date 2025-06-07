@@ -7,7 +7,8 @@ module Grape
         # We use a validator for renaming parameters. This is just a marker for
         # the parameter scope to handle the renaming. No actual validation
         # happens here.
-        def validate_param!(*); end
+        def validate_param!(*)
+        end
       end
     end
   end

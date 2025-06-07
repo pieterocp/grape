@@ -49,7 +49,7 @@ module Grape
         end
 
         def accept_header
-          env['HTTP_ACCEPT']
+          env["HTTP_ACCEPT"]
         end
 
         def strict_header_checks!
@@ -62,13 +62,13 @@ module Grape
         def accept_header_check!
           return if accept_header.present?
 
-          invalid_accept_header!('Accept header must be set.')
+          invalid_accept_header!("Accept header must be set.")
         end
 
         def version_and_vendor_check!
           return if versions.blank? || version_and_vendor?
 
-          invalid_accept_header!('API vendor or version not found.')
+          invalid_accept_header!("API vendor or version not found.")
         end
 
         def q_values_mime_types
@@ -97,13 +97,13 @@ module Grape
         def vendor_not_found!(media_types)
           return unless media_types.all? { |media_type| media_type&.vendor && media_type.vendor != vendor }
 
-          invalid_accept_header!('API vendor not found.')
+          invalid_accept_header!("API vendor not found.")
         end
 
         def version_not_found!(media_types)
           return unless media_types.all? { |media_type| media_type&.version && versions&.exclude?(media_type.version) }
 
-          invalid_version_header!('API version not found.')
+          invalid_version_header!("API version not found.")
         end
 
         def available_media_types

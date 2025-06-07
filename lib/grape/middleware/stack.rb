@@ -57,7 +57,7 @@ module Grape
         middlewares.insert(index, self.class::Middleware.new(klass, args, block))
       end
 
-      alias insert_before insert
+      alias_method :insert_before, :insert
 
       def insert_after(index, *args, &block)
         index = assert_index(index, :after)
