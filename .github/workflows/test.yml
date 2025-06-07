@@ -4,20 +4,14 @@ on: [push, pull_request]
 
 jobs:
   lint:
-    name: RuboCop
+    name: Standard Ruby
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
+    - name: Standard Ruby
+      uses: standardrb/standard-ruby-action@44aa4aecb87194c543e768b2329be931a55937be # 1.4.0
       with:
-        ruby-version: 3.4
-        bundler-cache: true
-        rubygems: latest
-
-    - name: Run RuboCop
-      run: bundle exec rubocop
+        ruby-version: '3.4'
+        autofix: 'false'
 
   test:
     strategy:
