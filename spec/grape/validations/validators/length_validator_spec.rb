@@ -16,6 +16,12 @@ describe Grape::Validations::Validators::LengthValidator do
       end
 
       params do
+        requires :text, type: String, length: { min: 1, max: 3 }
+      end
+      post 'string_example' do
+      end
+
+      params do
         requires :list, type: [Integer], length: { max: 3 }
       end
       post 'with_max_only' do
@@ -147,6 +153,23 @@ describe Grape::Validations::Validators::LengthValidator do
         post '/with_max_only', list: [1, 2, 3, 4, 5]
         expect(last_response.status).to eq(400)
         expect(last_response.body).to eq('list is expected to have length less than or equal to 3')
+      end
+    end
+  end
+
+  describe '/string_example' do
+    context 'when length is between limits' do
+      it do
+        post '/string_example', text: 'ab'
+        expect(last_response.status).to eq(201)
+        expect(last_response.body).to eq('')
+      end
+    end
+    context 'when length is greater than limit' do
+      it do
+        post '/string_example', text: 'too long'
+        expect(last_response.status).to eq(400)
+        expect(last_response.body).to eq('text is expected to have length within 1 and 3')
       end
     end
   end
