@@ -19,13 +19,13 @@ module Grape
       class Path < Base
         def before
           path_info = Grape::Router.normalize_path(env[Rack::PATH_INFO])
-          return if path_info == '/'
+          return if path_info == "/"
 
           [mount_path, Grape::Router.normalize_path(prefix)].each do |path|
-            path_info.delete_prefix!(path) if path.present? && path != '/' && path_info.start_with?(path)
+            path_info.delete_prefix!(path) if path.present? && path != "/" && path_info.start_with?(path)
           end
 
-          slash_position = path_info.index('/', 1) # omit the first one
+          slash_position = path_info.index("/", 1) # omit the first one
           return unless slash_position
 
           potential_version = path_info[1..(slash_position - 1)]

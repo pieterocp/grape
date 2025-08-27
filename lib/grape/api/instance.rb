@@ -172,7 +172,7 @@ module Grape
         status, headers, response = @router.call(env)
         unless cascade?
           headers = Grape::Util::Header.new.merge(headers)
-          headers.delete('X-Cascade')
+          headers.delete("X-Cascade")
         end
 
         [status, headers, response]
@@ -217,7 +217,7 @@ module Grape
         # Build the configuration based on the first endpoint and the collection of methods supported.
         routes_by_regexp.each_value do |routes|
           last_route = routes.last # Most of the configuration is taken from the last endpoint
-          next if routes.any? { |route| route.request_method == '*' }
+          next if routes.any? { |route| route.request_method == "*" }
 
           allowed_methods = routes.map(&:request_method)
           allowed_methods |= [Rack::HEAD] if !self.class.namespace_inheritable(:do_not_route_head) && allowed_methods.include?(Rack::GET)
@@ -226,9 +226,9 @@ module Grape
           last_route.app.options[:options_route_enabled] = true unless self.class.namespace_inheritable(:do_not_route_options) || allowed_methods.include?(Rack::OPTIONS)
 
           @router.associate_routes(last_route.pattern, {
-                                     endpoint: last_route.app,
-                                     allow_header: allow_header
-                                   })
+            endpoint: last_route.app,
+            allow_header: allow_header
+          })
         end
       end
 

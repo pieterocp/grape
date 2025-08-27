@@ -11,12 +11,13 @@ describe Grape::DSL::Settings do
         within_namespace(&block)
       end
 
-      def reset_validations!; end
+      def reset_validations!
+      end
     end
   end
 
-  describe '#unset' do
-    it 'deletes a key from settings' do
+  describe "#unset" do
+    it "deletes a key from settings" do
       subject.namespace_setting :dummy, 1
       expect(subject.inheritable_setting.namespace.keys).to include(:dummy)
 
@@ -25,32 +26,32 @@ describe Grape::DSL::Settings do
     end
   end
 
-  describe '#get_or_set' do
-    it 'sets a values' do
+  describe "#get_or_set" do
+    it "sets a values" do
       subject.get_or_set :namespace, :dummy, 1
       expect(subject.namespace_setting(:dummy)).to eq 1
     end
 
-    it 'returns a value when nil is new value is provided' do
+    it "returns a value when nil is new value is provided" do
       subject.get_or_set :namespace, :dummy, 1
       expect(subject.get_or_set(:namespace, :dummy, nil)).to eq 1
     end
   end
 
-  describe '#global_setting' do
-    it 'delegates to get_or_set' do
+  describe "#global_setting" do
+    it "delegates to get_or_set" do
       expect(subject).to receive(:get_or_set).with(:global, :dummy, 1)
       subject.global_setting(:dummy, 1)
     end
   end
 
-  describe '#route_setting' do
-    it 'delegates to get_or_set' do
+  describe "#route_setting" do
+    it "delegates to get_or_set" do
       expect(subject).to receive(:get_or_set).with(:route, :dummy, 1)
       subject.route_setting(:dummy, 1)
     end
 
-    it 'sets a value until the next route' do
+    it "sets a value until the next route" do
       subject.route_setting :some_thing, :foo_bar
       expect(subject.route_setting(:some_thing)).to eq :foo_bar
 
@@ -60,13 +61,13 @@ describe Grape::DSL::Settings do
     end
   end
 
-  describe '#namespace_setting' do
-    it 'delegates to get_or_set' do
+  describe "#namespace_setting" do
+    it "delegates to get_or_set" do
       expect(subject).to receive(:get_or_set).with(:namespace, :dummy, 1)
       subject.namespace_setting(:dummy, 1)
     end
 
-    it 'sets a value until the end of a namespace' do
+    it "sets a value until the end of a namespace" do
       subject.with_namespace do
         subject.namespace_setting :some_thing, :foo_bar
         expect(subject.namespace_setting(:some_thing)).to eq :foo_bar
@@ -74,7 +75,7 @@ describe Grape::DSL::Settings do
       expect(subject.namespace_setting(:some_thing)).to be_nil
     end
 
-    it 'resets values after leaving nested namespaces' do
+    it "resets values after leaving nested namespaces" do
       subject.with_namespace do
         subject.namespace_setting :some_thing, :foo_bar
         expect(subject.namespace_setting(:some_thing)).to eq :foo_bar
@@ -87,13 +88,13 @@ describe Grape::DSL::Settings do
     end
   end
 
-  describe '#namespace_inheritable' do
-    it 'delegates to get_or_set' do
+  describe "#namespace_inheritable" do
+    it "delegates to get_or_set" do
       expect(subject).to receive(:get_or_set).with(:namespace_inheritable, :dummy, 1)
       subject.namespace_inheritable(:dummy, 1)
     end
 
-    it 'inherits values from surrounding namespace' do
+    it "inherits values from surrounding namespace" do
       subject.with_namespace do
         subject.namespace_inheritable(:some_thing, :foo_bar)
         expect(subject.namespace_inheritable(:some_thing)).to eq :foo_bar
@@ -107,13 +108,13 @@ describe Grape::DSL::Settings do
     end
   end
 
-  describe '#namespace_stackable' do
-    it 'delegates to get_or_set' do
+  describe "#namespace_stackable" do
+    it "delegates to get_or_set" do
       expect(subject).to receive(:get_or_set).with(:namespace_stackable, :dummy, 1)
       subject.namespace_stackable(:dummy, 1)
     end
 
-    it 'stacks values from surrounding namespace' do
+    it "stacks values from surrounding namespace" do
       subject.with_namespace do
         subject.namespace_stackable(:some_thing, :foo_bar)
         expect(subject.namespace_stackable(:some_thing)).to eq [:foo_bar]
@@ -126,15 +127,15 @@ describe Grape::DSL::Settings do
     end
   end
 
-  describe '#unset_namespace_stackable' do
-    it 'delegates to unset' do
+  describe "#unset_namespace_stackable" do
+    it "delegates to unset" do
       expect(subject).to receive(:unset).with(:namespace_stackable, :dummy)
       subject.unset_namespace_stackable(:dummy)
     end
   end
 
-  describe 'complex scenario' do
-    it 'plays well' do
+  describe "complex scenario" do
+    it "plays well" do
       obj1 = dummy_class.new
       obj2 = dummy_class.new
       obj3 = dummy_class.new

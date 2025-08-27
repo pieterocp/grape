@@ -133,11 +133,11 @@ module Grape
       X-WebKit-CS
       X-XSS-Protection
     ].each_with_object({}) do |header, response|
-      response["HTTP_#{header.upcase.tr('-', '_')}"] = header
+      response["HTTP_#{header.upcase.tr("-", "_")}"] = header
     end.freeze
 
-    alias rack_params params
-    alias rack_cookies cookies
+    alias_method :rack_params, :params
+    alias_method :rack_cookies, :cookies
 
     def initialize(env, build_params_with: nil)
       super(env)
@@ -180,9 +180,9 @@ module Grape
 
     def build_headers
       each_header.with_object(Grape::Util::Header.new) do |(k, v), headers|
-        next unless k.start_with? 'HTTP_'
+        next unless k.start_with? "HTTP_"
 
-        transformed_header = KNOWN_HEADERS.fetch(k) { -k[5..].tr('_', '-').downcase }
+        transformed_header = KNOWN_HEADERS.fetch(k) { -k[5..].tr("_", "-").downcase }
         headers[transformed_header] = v
       end
     end

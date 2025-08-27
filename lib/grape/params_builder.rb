@@ -5,9 +5,9 @@ module Grape
     extend Grape::Util::Registry
 
     SHORT_NAME_LOOKUP = {
-      'Grape::Extensions::Hash::ParamBuilder' => :hash,
-      'Grape::Extensions::ActiveSupport::HashWithIndifferentAccess::ParamBuilder' => :hash_with_indifferent_access,
-      'Grape::Extensions::Hashie::Mash::ParamBuilder' => :hashie_mash
+      "Grape::Extensions::Hash::ParamBuilder" => :hash,
+      "Grape::Extensions::ActiveSupport::HashWithIndifferentAccess::ParamBuilder" => :hash_with_indifferent_access,
+      "Grape::Extensions::Hashie::Mash::ParamBuilder" => :hashie_mash
     }.freeze
 
     module_function

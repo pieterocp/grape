@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 describe Grape::Exceptions::ValidationErrors do
-  context 'api with rescue_from :all handler' do
+  context "api with rescue_from :all handler" do
     subject { Class.new(Grape::API) }
 
     before do
       subject.rescue_from :all do |_e|
-        error! 'message was processed', 400
+        error! "message was processed", 400
       end
       subject.params do
         requires :beer
       end
-      subject.post '/beer' do
-        'beer received'
+      subject.post "/beer" do
+        "beer received"
       end
     end
 
@@ -20,53 +20,53 @@ describe Grape::Exceptions::ValidationErrors do
       subject
     end
 
-    context 'with content_type json' do
-      it 'can recover from failed body parsing' do
-        post '/beer', 'test', 'CONTENT_TYPE' => 'application/json'
+    context "with content_type json" do
+      it "can recover from failed body parsing" do
+        post "/beer", "test", "CONTENT_TYPE" => "application/json"
         expect(last_response.status).to eq 400
-        expect(last_response.body).to eq('message was processed')
+        expect(last_response.body).to eq("message was processed")
       end
     end
 
-    context 'with content_type xml' do
-      it 'can recover from failed body parsing' do
-        post '/beer', 'test', 'CONTENT_TYPE' => 'application/xml'
+    context "with content_type xml" do
+      it "can recover from failed body parsing" do
+        post "/beer", "test", "CONTENT_TYPE" => "application/xml"
         expect(last_response.status).to eq 400
-        expect(last_response.body).to eq('message was processed')
+        expect(last_response.body).to eq("message was processed")
       end
     end
 
-    context 'with content_type text' do
-      it 'can recover from failed body parsing' do
-        post '/beer', 'test', 'CONTENT_TYPE' => 'text/plain'
+    context "with content_type text" do
+      it "can recover from failed body parsing" do
+        post "/beer", "test", "CONTENT_TYPE" => "text/plain"
         expect(last_response.status).to eq 400
-        expect(last_response.body).to eq('message was processed')
+        expect(last_response.body).to eq("message was processed")
       end
     end
 
-    context 'with no specific content_type' do
-      it 'can recover from failed body parsing' do
-        post '/beer', 'test', {}
+    context "with no specific content_type" do
+      it "can recover from failed body parsing" do
+        post "/beer", "test", {}
         expect(last_response.status).to eq 400
-        expect(last_response.body).to eq('message was processed')
+        expect(last_response.body).to eq("message was processed")
       end
     end
   end
 
-  context 'api with rescue_from :grape_exceptions handler' do
+  context "api with rescue_from :grape_exceptions handler" do
     subject { Class.new(Grape::API) }
 
     before do
       subject.rescue_from :all do |_e|
-        error! 'message was processed', 400
+        error! "message was processed", 400
       end
       subject.rescue_from :grape_exceptions
 
       subject.params do
         requires :beer
       end
-      subject.post '/beer' do
-        'beer received'
+      subject.post "/beer" do
+        "beer received"
       end
     end
 
@@ -74,24 +74,24 @@ describe Grape::Exceptions::ValidationErrors do
       subject
     end
 
-    context 'with content_type json' do
-      it 'returns body parsing error message' do
-        post '/beer', 'test', 'CONTENT_TYPE' => 'application/json'
+    context "with content_type json" do
+      it "returns body parsing error message" do
+        post "/beer", "test", "CONTENT_TYPE" => "application/json"
         expect(last_response.status).to eq 400
-        expect(last_response.body).to include 'message body does not match declared format'
+        expect(last_response.body).to include "message body does not match declared format"
       end
     end
 
-    context 'with content_type xml' do
-      it 'returns body parsing error message' do
-        post '/beer', 'test', 'CONTENT_TYPE' => 'application/xml'
+    context "with content_type xml" do
+      it "returns body parsing error message" do
+        post "/beer", "test", "CONTENT_TYPE" => "application/xml"
         expect(last_response.status).to eq 400
-        expect(last_response.body).to include 'message body does not match declared format'
+        expect(last_response.body).to include "message body does not match declared format"
       end
     end
   end
 
-  context 'api with rescue_from :grape_exceptions handler with block' do
+  context "api with rescue_from :grape_exceptions handler with block" do
     subject { Class.new(Grape::API) }
 
     before do
@@ -103,8 +103,8 @@ describe Grape::Exceptions::ValidationErrors do
         requires :beer
       end
 
-      subject.post '/beer' do
-        'beer received'
+      subject.post "/beer" do
+        "beer received"
       end
     end
 
@@ -112,34 +112,34 @@ describe Grape::Exceptions::ValidationErrors do
       subject
     end
 
-    context 'with content_type json' do
-      it 'returns body parsing error message' do
-        post '/beer', 'test', 'CONTENT_TYPE' => 'application/json'
+    context "with content_type json" do
+      it "returns body parsing error message" do
+        post "/beer", "test", "CONTENT_TYPE" => "application/json"
         expect(last_response.status).to eq 400
-        expect(last_response.body).to include 'message body does not match declared format'
-        expect(last_response.body).to include 'Custom Error Contents, Original Message'
+        expect(last_response.body).to include "message body does not match declared format"
+        expect(last_response.body).to include "Custom Error Contents, Original Message"
       end
     end
 
-    context 'with content_type xml' do
-      it 'returns body parsing error message' do
-        post '/beer', 'test', 'CONTENT_TYPE' => 'application/xml'
+    context "with content_type xml" do
+      it "returns body parsing error message" do
+        post "/beer", "test", "CONTENT_TYPE" => "application/xml"
         expect(last_response.status).to eq 400
-        expect(last_response.body).to include 'message body does not match declared format'
-        expect(last_response.body).to include 'Custom Error Contents, Original Message'
+        expect(last_response.body).to include "message body does not match declared format"
+        expect(last_response.body).to include "Custom Error Contents, Original Message"
       end
     end
   end
 
-  context 'api without a rescue handler' do
+  context "api without a rescue handler" do
     subject { Class.new(Grape::API) }
 
     before do
       subject.params do
         requires :beer
       end
-      subject.post '/beer' do
-        'beer received'
+      subject.post "/beer" do
+        "beer received"
       end
     end
 
@@ -147,38 +147,38 @@ describe Grape::Exceptions::ValidationErrors do
       subject
     end
 
-    context 'and with content_type json' do
-      it 'can recover from failed body parsing' do
-        post '/beer', 'test', 'CONTENT_TYPE' => 'application/json'
+    context "and with content_type json" do
+      it "can recover from failed body parsing" do
+        post "/beer", "test", "CONTENT_TYPE" => "application/json"
         expect(last_response.status).to eq 400
-        expect(last_response.body).to include('message body does not match declared format')
-        expect(last_response.body).to include('application/json')
+        expect(last_response.body).to include("message body does not match declared format")
+        expect(last_response.body).to include("application/json")
       end
     end
 
-    context 'with content_type xml' do
-      it 'can recover from failed body parsing' do
-        post '/beer', 'test', 'CONTENT_TYPE' => 'application/xml'
+    context "with content_type xml" do
+      it "can recover from failed body parsing" do
+        post "/beer", "test", "CONTENT_TYPE" => "application/xml"
         expect(last_response.status).to eq 400
-        expect(last_response.body).to include('message body does not match declared format')
-        expect(last_response.body).to include('application/xml')
+        expect(last_response.body).to include("message body does not match declared format")
+        expect(last_response.body).to include("application/xml")
       end
     end
 
-    context 'with content_type text' do
-      it 'can recover from failed body parsing' do
-        post '/beer', 'test', 'CONTENT_TYPE' => 'text/plain'
+    context "with content_type text" do
+      it "can recover from failed body parsing" do
+        post "/beer", "test", "CONTENT_TYPE" => "text/plain"
         expect(last_response.status).to eq 400
-        expect(last_response.body).to eq('beer is missing')
+        expect(last_response.body).to eq("beer is missing")
       end
     end
 
-    context 'and with no specific content_type' do
-      it 'can recover from failed body parsing' do
-        post '/beer', 'test', {}
+    context "and with no specific content_type" do
+      it "can recover from failed body parsing" do
+        post "/beer", "test", {}
         expect(last_response.status).to eq 400
         # plain response with text/html
-        expect(last_response.body).to eq('beer is missing')
+        expect(last_response.body).to eq("beer is missing")
       end
     end
   end

@@ -11,7 +11,7 @@ module Grape
         @options = options.is_a?(ActiveSupport::OrderedOptions) ? options : ActiveSupport::OrderedOptions.new.update(options)
       end
 
-      alias attributes options
+      alias_method :attributes, :options
 
       def regexp_capture_index
         CaptureIndexCache[index]

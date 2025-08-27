@@ -16,33 +16,33 @@ describe Rack::Sendfile do
     end
 
     options = {
-      method: Rack::GET,
-      'HTTP_X_SENDFILE_TYPE' => 'X-Accel-Redirect',
-      'HTTP_X_ACCEL_MAPPING' => '/accel/mapping/=/replaced/'
+      :method => Rack::GET,
+      "HTTP_X_SENDFILE_TYPE" => "X-Accel-Redirect",
+      "HTTP_X_ACCEL_MAPPING" => "/accel/mapping/=/replaced/"
     }
-    env = Rack::MockRequest.env_for('/', options)
+    env = Rack::MockRequest.env_for("/", options)
     app.call(env)
   end
 
-  context 'when calling sendfile' do
+  context "when calling sendfile" do
     let(:file_object) do
-      '/accel/mapping/some/path'
+      "/accel/mapping/some/path"
     end
 
-    it 'contains Sendfile headers' do
+    it "contains Sendfile headers" do
       headers = subject[1]
-      expect(headers).to include('X-Accel-Redirect')
+      expect(headers).to include("X-Accel-Redirect")
     end
   end
 
-  context 'when streaming non file content' do
+  context "when streaming non file content" do
     let(:file_object) do
       double(:file_object, each: nil)
     end
 
-    it 'not contains Sendfile headers' do
+    it "not contains Sendfile headers" do
       headers = subject[1]
-      expect(headers).not_to include('X-Accel-Redirect')
+      expect(headers).not_to include("X-Accel-Redirect")
     end
   end
 end

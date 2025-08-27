@@ -44,10 +44,10 @@ module Grape
 
       def error_formatter(format, options)
         formatter = if options.is_a?(Hash) && options.key?(:with)
-                      options[:with]
-                    else
-                      options
-                    end
+          options[:with]
+        else
+          options
+        end
 
         namespace_stackable(:error_formatters, format.to_sym => formatter)
       end
@@ -97,7 +97,7 @@ module Grape
         end
 
         options = args.extract_options!
-        raise ArgumentError, 'both :with option and block cannot be passed' if block && options.key?(:with)
+        raise ArgumentError, "both :with option and block cannot be passed" if block && options.key?(:with)
 
         handler ||= extract_with(options)
 

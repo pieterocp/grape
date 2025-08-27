@@ -18,12 +18,12 @@ module Grape
       # route.
       class AcceptVersionHeader < Base
         def before
-          potential_version = env['HTTP_ACCEPT_VERSION'].try(:scrub)
-          not_acceptable!('Accept-Version header must be set.') if strict? && potential_version.blank?
+          potential_version = env["HTTP_ACCEPT_VERSION"].try(:scrub)
+          not_acceptable!("Accept-Version header must be set.") if strict? && potential_version.blank?
 
           return if potential_version.blank?
 
-          not_acceptable!('The requested version is not supported.') unless potential_version_match?(potential_version)
+          not_acceptable!("The requested version is not supported.") unless potential_version_match?(potential_version)
           env[Grape::Env::API_VERSION] = potential_version
         end
 

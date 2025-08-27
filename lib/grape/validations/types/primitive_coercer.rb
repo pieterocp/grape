@@ -65,7 +65,7 @@ module Grape
         # absence of a value and coerces it into nil. See a discussion there
         # https://github.com/ruby-grape/grape/pull/2045
         def treat_as_nil?(val)
-          val == '' && type != String
+          val == "" && type != String
         end
       end
     end

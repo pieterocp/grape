@@ -86,11 +86,11 @@ module Grape
       end
 
       def mount(mounts, *opts)
-        mounts = { mounts => '/' } unless mounts.respond_to?(:each_pair)
+        mounts = {mounts => "/"} unless mounts.respond_to?(:each_pair)
         mounts.each_pair do |app, path|
           if app.respond_to?(:mount_instance)
             opts_with = opts.any? ? opts.first[:with] : {}
-            mount({ app.mount_instance(configuration: opts_with) => path }, *opts)
+            mount({app.mount_instance(configuration: opts_with) => path}, *opts)
             next
           end
           in_setting = inheritable_setting
@@ -121,7 +121,7 @@ module Grape
             method: :any,
             path: path,
             app: app,
-            route_options: { anchor: false },
+            route_options: {anchor: false},
             forward_match: !app.respond_to?(:inheritable_setting),
             for: self
           )
@@ -140,8 +140,8 @@ module Grape
       #       {hello: 'world'}
       #     end
       #   end
-      def route(methods, paths = ['/'], route_options = {}, &block)
-        methods = '*' if methods == :any
+      def route(methods, paths = ["/"], route_options = {}, &block)
+        methods = "*" if methods == :any
         endpoint_options = {
           method: methods,
           path: paths,
@@ -161,7 +161,7 @@ module Grape
       Grape::HTTP_SUPPORTED_METHODS.each do |supported_method|
         define_method supported_method.downcase do |*args, &block|
           options = args.extract_options!
-          paths = args.first || ['/']
+          paths = args.first || ["/"]
           route(supported_method, paths, options, &block)
         end
       end
@@ -188,10 +188,10 @@ module Grape
         end
       end
 
-      alias group namespace
-      alias resource namespace
-      alias resources namespace
-      alias segment namespace
+      alias_method :group, :namespace
+      alias_method :resource, :namespace
+      alias_method :resources, :namespace
+      alias_method :segment, :namespace
 
       # An array of API routes.
       def routes
@@ -216,13 +216,17 @@ module Grape
       def route_param(param, options = {}, &block)
         options = options.dup
 
-        options[:requirements] = {
-          param.to_sym => options[:requirements]
-        } if options[:requirements].is_a?(Regexp)
+        if options[:requirements].is_a?(Regexp)
+          options[:requirements] = {
+            param.to_sym => options[:requirements]
+          }
+        end
 
-        Grape::Validations::ParamsScope.new(api: self) do
-          requires param, type: options[:type]
-        end if options.key?(:type)
+        if options.key?(:type)
+          Grape::Validations::ParamsScope.new(api: self) do
+            requires param, type: options[:type]
+          end
+        end
 
         namespace(":#{param}", options, &block)
       end
@@ -235,7 +239,7 @@ module Grape
       private
 
       def refresh_mounted_api(mounts, *opts)
-        opts << { refresh_already_mounted: true }
+        opts << {refresh_already_mounted: true}
         mount(mounts, *opts)
       end
     end

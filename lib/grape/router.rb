@@ -12,19 +12,19 @@ module Grape
     #     normalize_path("/%ab")  # => "/%AB"
     # https://github.com/rails/rails/blob/00cc4ff0259c0185fe08baadaa40e63ea2534f6e/actionpack/lib/action_dispatch/journey/router/utils.rb#L19
     def self.normalize_path(path)
-      return '/' unless path
-      return path if path == '/'
+      return "/" unless path
+      return path if path == "/"
 
       # Fast path for the overwhelming majority of paths that don't need to be normalized
-      return path.dup if path.start_with?('/') && !(path.end_with?('/') || path.match?(%r{%|//}))
+      return path.dup if path.start_with?("/") && !(path.end_with?("/") || path.match?(%r{%|//}))
 
       # Slow path
       encoding = path.encoding
       path = "/#{path}"
-      path.squeeze!('/')
+      path.squeeze!("/")
 
-      unless path == '/'
-        path.delete_suffix!('/')
+      unless path == "/"
+        path.delete_suffix!("/")
         path.gsub!(/(%[a-f0-9]{2})/) { ::Regexp.last_match(1).upcase }
       end
 
@@ -43,7 +43,7 @@ module Grape
 
       @union = Regexp.union(@neutral_regexes)
       @neutral_regexes = nil
-      (Grape::HTTP_SUPPORTED_METHODS + ['*']).each do |method|
+      (Grape::HTTP_SUPPORTED_METHODS + ["*"]).each do |method|
         next unless map.key?(method)
 
         routes = map[method]
@@ -124,7 +124,7 @@ module Grape
       # return response by using #call_with_allow_headers.
       return call_with_allow_headers(env, last_neighbor_route) if last_neighbor_route && method == Rack::OPTIONS && !last_response_cascade
 
-      route = match?(input, '*')
+      route = match?(input, "*")
 
       return last_neighbor_route.options[:endpoint].call(env) if last_neighbor_route && last_response_cascade && route
 
@@ -141,7 +141,7 @@ module Grape
     end
 
     def make_routing_args(default_args, route, input)
-      args = default_args || { route_info: route }
+      args = default_args || {route_info: route}
       args.merge(route.params(input))
     end
 
@@ -157,8 +157,8 @@ module Grape
     end
 
     def default_response
-      headers = Grape::Util::Header.new.merge('X-Cascade' => 'pass')
-      [404, headers, ['404 Not Found']]
+      headers = Grape::Util::Header.new.merge("X-Cascade" => "pass")
+      [404, headers, ["404 Not Found"]]
     end
 
     def match?(input, method)
@@ -181,7 +181,7 @@ module Grape
     end
 
     def cascade?(response)
-      response && response[1]['X-Cascade'] == 'pass'
+      response && response[1]["X-Cascade"] == "pass"
     end
 
     def string_for(input)

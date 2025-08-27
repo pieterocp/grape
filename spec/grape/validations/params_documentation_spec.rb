@@ -43,101 +43,101 @@ describe Grape::Validations::ParamsDocumentation do
     end
   end
 
-  describe '#document_params' do
-    it 'stores documented params with all details' do
+  describe "#document_params" do
+    it "stores documented params with all details" do
       attrs = %i[foo bar]
       validations = {
         presence: true,
         default: 42,
-        length: { min: 1, max: 10 },
-        desc: 'A foo',
-        documentation: { note: 'doc' }
+        length: {min: 1, max: 10},
+        desc: "A foo",
+        documentation: {note: "doc"}
       }
       type = Integer
       values = [1, 2, 3]
       except_values = [4, 5, 6]
       subject.document_params(attrs, validations.dup, type, values, except_values)
-      expect(api_double.namespace_stackable(:params).keys).to include('full_name_foo', 'full_name_bar')
-      expect(api_double.namespace_stackable(:params)['full_name_foo']).to include(
+      expect(api_double.namespace_stackable(:params).keys).to include("full_name_foo", "full_name_bar")
+      expect(api_double.namespace_stackable(:params)["full_name_foo"]).to include(
         required: true,
-        type: 'Integer',
+        type: "Integer",
         values: [1, 2, 3],
         except_values: [4, 5, 6],
         default: 42,
         min_length: 1,
         max_length: 10,
-        desc: 'A foo',
-        documentation: { note: 'doc' }
+        desc: "A foo",
+        documentation: {note: "doc"}
       )
     end
 
-    context 'when do_not_document is set' do
+    context "when do_not_document is set" do
       let(:validations) do
-        { desc: 'desc', description: 'description', documentation: { foo: 'bar' }, another_param: 'test' }
+        {desc: "desc", description: "description", documentation: {foo: "bar"}, another_param: "test"}
       end
 
       before do
         allow(api_double).to receive(:namespace_inheritable).with(:do_not_document).and_return(true)
       end
 
-      it 'removes desc, description, and documentation' do
+      it "removes desc, description, and documentation" do
         subject.document_params([:foo], validations)
-        expect(validations).to eq({ another_param: 'test' })
+        expect(validations).to eq({another_param: "test"})
       end
     end
 
-    context 'when validation is empty' do
+    context "when validation is empty" do
       let(:validations) do
         {}
       end
 
-      it 'does not raise an error' do
+      it "does not raise an error" do
         expect { subject.document_params([:foo], validations) }.not_to raise_error
-        expect(api_double.namespace_stackable(:params)['full_name_foo']).to eq({ required: false })
+        expect(api_double.namespace_stackable(:params)["full_name_foo"]).to eq({required: false})
       end
     end
 
-    context 'when desc is not present' do
+    context "when desc is not present" do
       let(:validations) do
-        { description: 'desc2' }
+        {description: "desc2"}
       end
 
-      it 'uses description if desc is not present' do
+      it "uses description if desc is not present" do
         subject.document_params([:foo], validations)
-        expect(api_double.namespace_stackable(:params)['full_name_foo'][:desc]).to eq('desc2')
+        expect(api_double.namespace_stackable(:params)["full_name_foo"][:desc]).to eq("desc2")
       end
     end
 
-    context 'when desc nor description is present' do
-      let(:validations) do
-        {}
-      end
-
-      it 'uses description if desc is not present' do
-        subject.document_params([:foo], validations)
-        expect(api_double.namespace_stackable(:params)['full_name_foo']).to eq({ required: false })
-      end
-    end
-
-    context 'when documentation is not present' do
+    context "when desc nor description is present" do
       let(:validations) do
         {}
       end
 
-      it 'does not include documentation' do
+      it "uses description if desc is not present" do
         subject.document_params([:foo], validations)
-        expect(api_double.namespace_stackable(:params)['full_name_foo']).not_to have_key(:documentation)
+        expect(api_double.namespace_stackable(:params)["full_name_foo"]).to eq({required: false})
       end
     end
 
-    context 'when type is nil' do
+    context "when documentation is not present" do
       let(:validations) do
-        { presence: true }
+        {}
       end
 
-      it 'sets type as nil' do
+      it "does not include documentation" do
         subject.document_params([:foo], validations)
-        expect(api_double.namespace_stackable(:params)['full_name_foo'][:type]).to be_nil
+        expect(api_double.namespace_stackable(:params)["full_name_foo"]).not_to have_key(:documentation)
+      end
+    end
+
+    context "when type is nil" do
+      let(:validations) do
+        {presence: true}
+      end
+
+      it "sets type as nil" do
+        subject.document_params([:foo], validations)
+        expect(api_double.namespace_stackable(:params)["full_name_foo"][:type]).to be_nil
       end
     end
   end

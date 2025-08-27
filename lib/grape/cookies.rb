@@ -5,8 +5,8 @@ module Grape
     extend Forwardable
 
     DELETED_COOKIES_ATTRS = {
-      max_age: '0',
-      value: '',
+      max_age: "0",
+      value: "",
       expires: Time.at(0)
     }.freeze
 

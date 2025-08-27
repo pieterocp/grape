@@ -39,8 +39,8 @@ describe Grape::DSL::Helpers do
     end
   end
 
-  describe '.helpers' do
-    it 'adds a module with the given block' do
+  describe ".helpers" do
+    it "adds a module with the given block" do
       expect(subject).to receive(:namespace_stackable).with(:helpers, kind_of(Grape::DSL::Helpers::BaseHelper)).and_call_original
       expect(subject).to receive(:namespace_stackable).with(:helpers).and_call_original
       subject.helpers(&proc)
@@ -48,7 +48,7 @@ describe Grape::DSL::Helpers do
       expect(subject.first_mod.instance_methods).to include(:test)
     end
 
-    it 'uses provided modules' do
+    it "uses provided modules" do
       mod = Module.new
 
       expect(subject).to receive(:namespace_stackable).with(:helpers, kind_of(Grape::DSL::Helpers::BaseHelper)).and_call_original.twice
@@ -58,8 +58,8 @@ describe Grape::DSL::Helpers do
       expect(subject.first_mod).to eq mod
     end
 
-    it 'uses many provided modules' do
-      mod  = Module.new
+    it "uses many provided modules" do
+      mod = Module.new
       mod2 = Module.new
       mod3 = Module.new
 
@@ -73,7 +73,7 @@ describe Grape::DSL::Helpers do
       expect(subject.mods).to include(mod3)
     end
 
-    context 'with an external file' do
+    context "with an external file" do
       let(:boolean_helper) do
         Module.new do
           extend Grape::API::Helpers
@@ -84,13 +84,13 @@ describe Grape::DSL::Helpers do
         end
       end
 
-      it 'sets Boolean as a Grape::API::Boolean' do
+      it "sets Boolean as a Grape::API::Boolean" do
         subject.helpers boolean_helper
         expect(subject.first_mod::Boolean).to eq Grape::API::Boolean
       end
     end
 
-    context 'in child classes' do
+    context "in child classes" do
       let(:base_class) do
         Class.new(Grape::API) do
           helpers do
@@ -109,13 +109,13 @@ describe Grape::DSL::Helpers do
         end
       end
 
-      it 'is available' do
+      it "is available" do
         expect { api_class }.not_to raise_exception
       end
     end
 
-    context 'public scope' do
-      it 'returns helpers only' do
+    context "public scope" do
+      it "returns helpers only" do
         expect(Class.new { extend Grape::DSL::Helpers }.singleton_methods - Class.methods).to contain_exactly(:helpers)
       end
     end

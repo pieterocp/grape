@@ -5,7 +5,7 @@ describe Grape::Middleware::Error do
     Class.new do
       class << self
         def call(_env)
-          raise 'rain!'
+          raise "rain!"
         end
       end
     end
@@ -15,7 +15,7 @@ describe Grape::Middleware::Error do
     Class.new do
       class << self
         def call(_env)
-          raise NotImplementedError, 'snow!'
+          raise NotImplementedError, "snow!"
         end
       end
     end
@@ -26,7 +26,7 @@ describe Grape::Middleware::Error do
 
     Class.new do
       define_singleton_method(:call) do |_env|
-        raise custom_error.new(status: 400, message: 'failed validation')
+        raise custom_error.new(status: 400, message: "failed validation")
       end
     end
   end
@@ -35,11 +35,11 @@ describe Grape::Middleware::Error do
     Class.new do
       class << self
         def error!(message, status)
-          throw :error, message: { error: message, detail: 'missing widget' }, status: status
+          throw :error, message: {error: message, detail: "missing widget"}, status: status
         end
 
         def call(_env)
-          error!('rain!', 401)
+          error!("rain!", 401)
         end
       end
     end
@@ -53,7 +53,7 @@ describe Grape::Middleware::Error do
         end
 
         def call(_env)
-          error!('Access Denied', 401)
+          error!("Access Denied", 401)
         end
       end
     end
@@ -74,112 +74,112 @@ describe Grape::Middleware::Error do
     end
   end
 
-  context 'with defaults' do
+  context "with defaults" do
     let(:running_app) { exception_app }
     let(:options) { {} }
 
-    it 'does not trap errors by default' do
-      expect { get '/' }.to raise_error(RuntimeError, 'rain!')
+    it "does not trap errors by default" do
+      expect { get "/" }.to raise_error(RuntimeError, "rain!")
     end
   end
 
-  context 'with rescue_all' do
-    context 'StandardError exception' do
+  context "with rescue_all" do
+    context "StandardError exception" do
       let(:running_app) { exception_app }
-      let(:options) { { rescue_all: true } }
+      let(:options) { {rescue_all: true} }
 
-      it 'sets the message appropriately' do
-        get '/'
-        expect(last_response.body).to eq('rain!')
+      it "sets the message appropriately" do
+        get "/"
+        expect(last_response.body).to eq("rain!")
       end
 
-      it 'defaults to a 500 status' do
-        get '/'
+      it "defaults to a 500 status" do
+        get "/"
         expect(last_response.status).to eq(500)
       end
     end
 
-    context 'Non-StandardError exception' do
+    context "Non-StandardError exception" do
       let(:running_app) { other_exception_app }
-      let(:options) { { rescue_all: true } }
+      let(:options) { {rescue_all: true} }
 
-      it 'does not trap errors other than StandardError' do
-        expect { get '/' }.to raise_error(NotImplementedError, 'snow!')
+      it "does not trap errors other than StandardError" do
+        expect { get "/" }.to raise_error(NotImplementedError, "snow!")
       end
     end
   end
 
-  context 'Non-StandardError exception with a provided rescue handler' do
-    context 'default error response' do
+  context "Non-StandardError exception with a provided rescue handler" do
+    context "default error response" do
       let(:running_app) { other_exception_app }
-      let(:options) { { rescue_handlers: { NotImplementedError => nil } } }
+      let(:options) { {rescue_handlers: {NotImplementedError => nil}} }
 
-      it 'rescues the exception using the default handler' do
-        get '/'
-        expect(last_response.body).to eq('snow!')
+      it "rescues the exception using the default handler" do
+        get "/"
+        expect(last_response.body).to eq("snow!")
       end
     end
 
-    context 'custom error response' do
+    context "custom error response" do
       let(:running_app) { other_exception_app }
-      let(:options) { { rescue_handlers: { NotImplementedError => -> { Rack::Response.new('rescued', 200, {}) } } } }
+      let(:options) { {rescue_handlers: {NotImplementedError => -> { Rack::Response.new("rescued", 200, {}) }}} }
 
-      it 'rescues the exception using the provided handler' do
-        get '/'
-        expect(last_response.body).to eq('rescued')
+      it "rescues the exception using the provided handler" do
+        get "/"
+        expect(last_response.body).to eq("rescued")
       end
     end
   end
 
   context do
     let(:running_app) { exception_app }
-    let(:options) { { rescue_all: true, default_status: 500 } }
+    let(:options) { {rescue_all: true, default_status: 500} }
 
-    it 'is possible to specify a different default status code' do
-      get '/'
+    it "is possible to specify a different default status code" do
+      get "/"
       expect(last_response.status).to eq(500)
     end
   end
 
   context do
     let(:running_app) { exception_app }
-    let(:options) { { rescue_all: true, format: :json } }
+    let(:options) { {rescue_all: true, format: :json} }
 
-    it 'is possible to return errors in json format' do
-      get '/'
+    it "is possible to return errors in json format" do
+      get "/"
       expect(last_response.body).to eq('{"error":"rain!"}')
     end
   end
 
   context do
     let(:running_app) { error_hash_app }
-    let(:options) { { rescue_all: true, format: :json } }
+    let(:options) { {rescue_all: true, format: :json} }
 
-    it 'is possible to return hash errors in json format' do
-      get '/'
+    it "is possible to return hash errors in json format" do
+      get "/"
       expect(['{"error":"rain!","detail":"missing widget"}',
-              '{"detail":"missing widget","error":"rain!"}']).to include(last_response.body)
+        '{"detail":"missing widget","error":"rain!"}']).to include(last_response.body)
     end
   end
 
   context do
     let(:running_app) { exception_app }
-    let(:options) { { rescue_all: true, format: :xml } }
+    let(:options) { {rescue_all: true, format: :xml} }
 
-    it 'is possible to return errors in xml format' do
-      get '/'
+    it "is possible to return errors in xml format" do
+      get "/"
       expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<error>\n  <message>rain!</message>\n</error>\n")
     end
   end
 
   context do
     let(:running_app) { error_hash_app }
-    let(:options) { { rescue_all: true, format: :xml } }
+    let(:options) { {rescue_all: true, format: :xml} }
 
-    it 'is possible to return hash errors in xml format' do
-      get '/'
+    it "is possible to return hash errors in xml format" do
+      get "/"
       expect(["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<error>\n  <detail>missing widget</detail>\n  <error>rain!</error>\n</error>\n",
-              "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<error>\n  <error>rain!</error>\n  <detail>missing widget</detail>\n</error>\n"]).to include(last_response.body)
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<error>\n  <error>rain!</error>\n  <detail>missing widget</detail>\n</error>\n"]).to include(last_response.body)
     end
   end
 
@@ -191,15 +191,15 @@ describe Grape::Middleware::Error do
         format: :custom,
         error_formatters: {
           custom: lambda do |message, _backtrace, _options, _env, _original_exception|
-            { custom_formatter: message }.inspect
+            {custom_formatter: message}.inspect
           end
         }
       }
     end
 
-    it 'is possible to specify a custom formatter' do
-      get '/'
-      response = Rack::Utils.escape_html({ custom_formatter: 'rain!' }.inspect)
+    it "is possible to specify a custom formatter" do
+      get "/"
+      response = Rack::Utils.escape_html({custom_formatter: "rain!"}.inspect)
       expect(last_response.body).to eq(response)
     end
   end
@@ -208,36 +208,36 @@ describe Grape::Middleware::Error do
     let(:running_app) { access_denied_app }
     let(:options) { {} }
 
-    it 'does not trap regular error! codes' do
-      get '/'
+    it "does not trap regular error! codes" do
+      get "/"
       expect(last_response.status).to eq(401)
     end
   end
 
   context do
     let(:running_app) { custom_error_app }
-    let(:options) { { rescue_all: false } }
+    let(:options) { {rescue_all: false} }
 
-    it 'responds to custom Grape exceptions appropriately' do
-      get '/'
+    it "responds to custom Grape exceptions appropriately" do
+      get "/"
       expect(last_response.status).to eq(400)
-      expect(last_response.body).to eq('failed validation')
+      expect(last_response.body).to eq("failed validation")
     end
   end
 
-  context 'with rescue_options :backtrace and :exception set to true' do
+  context "with rescue_options :backtrace and :exception set to true" do
     let(:running_app) { exception_app }
     let(:options) do
       {
         rescue_all: true,
         format: :json,
-        rescue_options: { backtrace: true, original_exception: true }
+        rescue_options: {backtrace: true, original_exception: true}
       }
     end
 
-    it 'is possible to return the backtrace and the original exception in json format' do
-      get '/'
-      expect(last_response.body).to include('error', 'rain!', 'backtrace', 'original_exception', 'RuntimeError')
+    it "is possible to return the backtrace and the original exception in json format" do
+      get "/"
+      expect(last_response.body).to include("error", "rain!", "backtrace", "original_exception", "RuntimeError")
     end
   end
 
@@ -247,13 +247,13 @@ describe Grape::Middleware::Error do
       {
         rescue_all: true,
         format: :xml,
-        rescue_options: { backtrace: true, original_exception: true }
+        rescue_options: {backtrace: true, original_exception: true}
       }
     end
 
-    it 'is possible to return the backtrace and the original exception in xml format' do
-      get '/'
-      expect(last_response.body).to include('error', 'rain!', 'backtrace', 'original-exception', 'RuntimeError')
+    it "is possible to return the backtrace and the original exception in xml format" do
+      get "/"
+      expect(last_response.body).to include("error", "rain!", "backtrace", "original-exception", "RuntimeError")
     end
   end
 
@@ -263,13 +263,13 @@ describe Grape::Middleware::Error do
       {
         rescue_all: true,
         format: :txt,
-        rescue_options: { backtrace: true, original_exception: true }
+        rescue_options: {backtrace: true, original_exception: true}
       }
     end
 
-    it 'is possible to return the backtrace and the original exception in txt format' do
-      get '/'
-      expect(last_response.body).to include('error', 'rain!', 'backtrace', 'original exception', 'RuntimeError')
+    it "is possible to return the backtrace and the original exception in txt format" do
+      get "/"
+      expect(last_response.body).to include("error", "rain!", "backtrace", "original exception", "RuntimeError")
     end
   end
 end

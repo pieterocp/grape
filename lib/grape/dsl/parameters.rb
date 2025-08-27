@@ -68,8 +68,8 @@ module Grape
           end
         end
       end
-      alias use_scope use
-      alias includes use
+      alias_method :use_scope, :use
+      alias_method :includes, :use
 
       # Require one or more parameters for the current endpoint.
       #
@@ -127,7 +127,7 @@ module Grape
         orig_attrs = attrs.clone
 
         opts = attrs.extract_options!.clone
-        opts[:presence] = { value: true, message: opts[:message] }
+        opts[:presence] = {value: true, message: opts[:message]}
         opts = @group.deep_merge(opts) if instance_variable_defined?(:@group) && @group
 
         if opts[:using]
@@ -175,25 +175,25 @@ module Grape
       # Disallow the given parameters to be present in the same request.
       # @param attrs [*Symbol] parameters to validate
       def mutually_exclusive(*attrs)
-        validates(attrs, mutual_exclusion: { value: true, message: extract_message_option(attrs) })
+        validates(attrs, mutual_exclusion: {value: true, message: extract_message_option(attrs)})
       end
 
       # Require exactly one of the given parameters to be present.
       # @param (see #mutually_exclusive)
       def exactly_one_of(*attrs)
-        validates(attrs, exactly_one_of: { value: true, message: extract_message_option(attrs) })
+        validates(attrs, exactly_one_of: {value: true, message: extract_message_option(attrs)})
       end
 
       # Require at least one of the given parameters to be present.
       # @param (see #mutually_exclusive)
       def at_least_one_of(*attrs)
-        validates(attrs, at_least_one_of: { value: true, message: extract_message_option(attrs) })
+        validates(attrs, at_least_one_of: {value: true, message: extract_message_option(attrs)})
       end
 
       # Require that either all given params are present, or none are.
       # @param (see #mutually_exclusive)
       def all_or_none_of(*attrs)
-        validates(attrs, all_or_none_of: { value: true, message: extract_message_option(attrs) })
+        validates(attrs, all_or_none_of: {value: true, message: extract_message_option(attrs)})
       end
 
       # Define a block of validations which should be applied if and only if
@@ -227,7 +227,7 @@ module Grape
         end
       end
 
-      alias group requires
+      alias_method :group, :requires
 
       class EmptyOptionalValue; end # rubocop:disable Lint/EmptyClass
 
@@ -237,7 +237,7 @@ module Grape
             map_params(el, element, true)
           end
         elsif params.is_a?(Hash)
-          params[element] || (@optional && is_array ? EmptyOptionalValue : {})
+          params[element] || ((@optional && is_array) ? EmptyOptionalValue : {})
         elsif params == EmptyOptionalValue
           EmptyOptionalValue
         else

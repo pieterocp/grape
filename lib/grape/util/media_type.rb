@@ -44,7 +44,7 @@ module Grape
         def parse(media_type)
           return if media_type.blank?
 
-          type, subtype = media_type.split('/', 2)
+          type, subtype = media_type.split("/", 2)
           return if type.blank? || subtype.blank?
 
           new(type: type, subtype: subtype)
@@ -53,7 +53,7 @@ module Grape
         def match?(media_type)
           return false if media_type.blank?
 
-          subtype = media_type.split('/', 2).last
+          subtype = media_type.split("/", 2).last
           return false if subtype.blank?
 
           VENDOR_VERSION_HEADER_REGEX.match?(subtype)

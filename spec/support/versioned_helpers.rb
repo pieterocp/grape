@@ -9,9 +9,9 @@ module Spec
       def versioned_path(options)
         case options[:using]
         when :path
-          File.join('/', options[:prefix] || '', options[:version], options[:path])
+          File.join("/", options[:prefix] || "", options[:version], options[:path])
         when :param, :header, :accept_version_header
-          File.join('/', options[:prefix] || '', options[:path])
+          File.join("/", options[:prefix] || "", options[:path])
         else
           raise ArgumentError.new("unknown versioning strategy: #{options[:using]}")
         end
@@ -23,14 +23,14 @@ module Spec
           {}
         when :header
           {
-            'HTTP_ACCEPT' => [
+            "HTTP_ACCEPT" => [
               "application/vnd.#{options[:vendor]}-#{options[:version]}",
               options[:format]
-            ].compact.join('+')
+            ].compact.join("+")
           }
         when :accept_version_header
           {
-            'HTTP_ACCEPT_VERSION' => options[:version].to_s
+            "HTTP_ACCEPT_VERSION" => options[:version].to_s
           }
         else
           raise ArgumentError.new("unknown versioning strategy: #{options[:using]}")
@@ -41,7 +41,7 @@ module Spec
         path = versioned_path(version_options.merge(version: version_name, path: path))
         headers = versioned_headers(version_options.merge(version: version_name))
         params = {}
-        params = { version_options[:parameter] => version_name } if version_options[:using] == :param
+        params = {version_options[:parameter] => version_name} if version_options[:using] == :param
         get path, params, headers
       end
     end

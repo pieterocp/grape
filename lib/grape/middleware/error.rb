@@ -5,7 +5,7 @@ module Grape
     class Error < Base
       DEFAULT_OPTIONS = {
         default_status: 500,
-        default_message: '',
+        default_message: "",
         format: :txt,
         rescue_all: false,
         rescue_grape_exceptions: false,
@@ -26,7 +26,7 @@ module Grape
       private
 
       def rack_response(status, headers, message)
-        message = Rack::Utils.escape_html(message) if headers[Rack::CONTENT_TYPE] == 'text/html'
+        message = Rack::Utils.escape_html(message) if headers[Rack::CONTENT_TYPE] == "text/html"
         Rack::Response.new(Array.wrap(message), Rack::Utils.status_code(status), Grape::Util::Header.new.merge(headers))
       end
 
@@ -36,10 +36,10 @@ module Grape
         return formatter.call(message, backtrace, options, env, original_exception) if formatter
 
         throw :error,
-              status: 406,
-              message: "The requested format '#{format}' is not supported.",
-              backtrace: backtrace,
-              original_exception: original_exception
+          status: 406,
+          message: "The requested format '#{format}' is not supported.",
+          backtrace: backtrace,
+          original_exception: original_exception
       end
 
       def find_handler(klass)
@@ -54,7 +54,7 @@ module Grape
         status = error[:status] || options[:default_status]
         env[Grape::Env::API_ENDPOINT].status(status) # error! may not have been called
         message = error[:message] || options[:default_message]
-        headers = { Rack::CONTENT_TYPE => content_type }.tap do |h|
+        headers = {Rack::CONTENT_TYPE => content_type}.tap do |h|
           h.merge!(error[:headers]) if error[:headers].is_a?(Hash)
         end
         backtrace = error[:backtrace] || error[:original_exception]&.backtrace || []

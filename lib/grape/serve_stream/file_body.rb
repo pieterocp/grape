@@ -21,7 +21,7 @@ module Grape
       end
 
       def each
-        File.open(path, 'rb') do |file|
+        File.open(path, "rb") do |file|
           while (chunk = file.read(CHUNK_SIZE))
             yield chunk
           end

@@ -60,14 +60,14 @@ module Grape
       #   validate if this param is present in the parent scope
       # @yield the instance context, open for parameter definitions
       def initialize(opts, &block)
-        @element          = opts[:element]
-        @element_renamed  = opts[:element_renamed]
-        @parent           = opts[:parent]
-        @api              = opts[:api]
-        @optional         = opts[:optional] || false
-        @type             = opts[:type]
-        @group            = opts[:group]
-        @dependent_on     = opts[:dependent_on]
+        @element = opts[:element]
+        @element_renamed = opts[:element_renamed]
+        @parent = opts[:parent]
+        @api = opts[:api]
+        @optional = opts[:optional] || false
+        @type = opts[:type]
+        @group = opts[:group]
+        @dependent_on = opts[:dependent_on]
         @params_meeting_dependency = []
         @declared_params = []
         @index = nil
@@ -294,7 +294,7 @@ module Grape
           element: nil,
           parent: self,
           options: @optional,
-          type: type == Array ? Array : Hash,
+          type: (type == Array) ? Array : Hash,
           dependent_on: options[:dependent_on],
           &block
         )
@@ -375,7 +375,7 @@ module Grape
       # @return [class-like] type to which the parameter will be coerced
       # @raise [ArgumentError] if the given type options are invalid
       def infer_coercion(validations)
-        raise ArgumentError, ':type may not be supplied with :types' if validations.key?(:type) && validations.key?(:types)
+        raise ArgumentError, ":type may not be supplied with :types" if validations.key?(:type) && validations.key?(:types)
 
         validations[:coerce] = (options_key?(:type, :value, validations) ? validations[:type][:value] : validations[:type]) if validations.key?(:type)
         validations[:coerce_message] = (options_key?(:type, :message, validations) ? validations[:type][:message] : nil) if validations.key?(:type)
@@ -406,13 +406,13 @@ module Grape
       def check_coerce_with(validations)
         return unless validations.key?(:coerce_with)
         # type must be supplied for coerce_with..
-        raise ArgumentError, 'must supply type for coerce_with' unless validations.key?(:coerce)
+        raise ArgumentError, "must supply type for coerce_with" unless validations.key?(:coerce)
 
         # but not special JSON types, which
         # already imply coercion method
-        return if [JSON, Array[JSON]].exclude? validations[:coerce]
+        return if [JSON, [JSON]].exclude? validations[:coerce]
 
-        raise ArgumentError, 'coerce_with disallowed for type: JSON'
+        raise ArgumentError, "coerce_with disallowed for type: JSON"
       end
 
       # Add type coercion validation to this scope,
@@ -431,7 +431,7 @@ module Grape
           method: validations[:coerce_with],
           message: validations[:coerce_message]
         }
-        validate('coerce', coerce_options, attrs, required, opts)
+        validate("coerce", coerce_options, attrs, required, opts)
         validations.delete(:coerce_with)
         validations.delete(:coerce)
         validations.delete(:coerce_message)
@@ -486,7 +486,7 @@ module Grape
         return nil unless attrs.is_a?(Array)
 
         opts = attrs.last.is_a?(Hash) ? attrs.pop : {}
-        opts.key?(:message) && !opts[:message].nil? ? opts.delete(:message) : nil
+        (opts.key?(:message) && !opts[:message].nil?) ? opts.delete(:message) : nil
       end
 
       def options_key?(type, key, validations)
@@ -511,7 +511,7 @@ module Grape
       def validates_presence(validations, attrs, opts)
         return unless validations.key?(:presence) && validations[:presence]
 
-        validate('presence', validations.delete(:presence), attrs, true, opts)
+        validate("presence", validations.delete(:presence), attrs, true, opts)
         validations.delete(:message) if validations.key?(:message)
       end
     end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-eval_gemfile '../Gemfile'
+eval_gemfile "../Gemfile"
 
-gem 'grape-entity'
+gem "grape-entity"

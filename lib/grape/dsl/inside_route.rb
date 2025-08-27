@@ -14,7 +14,7 @@ module Grape
       #   defaults to an empty module if no overrides are defined for the given
       #   filter +type+.
       def self.post_filter_methods(type)
-        @post_filter_modules ||= { before: PostBeforeFilter }
+        @post_filter_modules ||= {before: PostBeforeFilter}
         @post_filter_modules[type]
       end
 
@@ -26,10 +26,10 @@ module Grape
           declared_params ||= optioned_declared_params(options[:include_parent_namespaces])
 
           res = if passed_params.is_a?(Array)
-                  declared_array(passed_params, options, declared_params, params_nested_path)
-                else
-                  declared_hash(passed_params, options, declared_params, params_nested_path)
-                end
+            declared_array(passed_params, options, declared_params, params_nested_path)
+          else
+            declared_hash(passed_params, options, declared_params, params_nested_path)
+          end
 
           if (key_maps = namespace_stackable(:contract_key_map))
             key_maps.each { |key_map| key_map.write(passed_params, res) }
@@ -95,17 +95,17 @@ module Grape
           return yield if has_passed_children
 
           key = params_nested_path[0]
-          key += "[#{params_nested_path[1..].join('][')}]" if params_nested_path.size > 1
+          key += "[#{params_nested_path[1..].join("][")}]" if params_nested_path.size > 1
 
           route_options_params = options[:route_options][:params] || {}
           type = route_options_params.dig(key, :type)
           has_children = route_options_params.keys.any? { |k| k != key && k.start_with?("#{key}[") }
 
-          if type == 'Hash' && !has_children
+          if type == "Hash" && !has_children
             {}
-          elsif type == 'Array' || (type&.start_with?('[') && type.exclude?(','))
+          elsif type == "Array" || (type&.start_with?("[") && type.exclude?(","))
             []
-          elsif type == 'Set' || type&.start_with?('#<Set')
+          elsif type == "Set" || type&.start_with?("#<Set")
             Set.new
           else
             yield
@@ -118,14 +118,14 @@ module Grape
 
         def optioned_declared_params(include_parent_namespaces)
           declared_params = if include_parent_namespaces
-                              # Declared params including parent namespaces
-                              route_setting(:declared_params)
-                            else
-                              # Declared params at current namespace
-                              namespace_stackable(:declared_params).last || []
-                            end
+            # Declared params including parent namespaces
+            route_setting(:declared_params)
+          else
+            # Declared params at current namespace
+            namespace_stackable(:declared_params).last || []
+          end
 
-          raise ArgumentError, 'Tried to filter for declared parameters but none exist.' unless declared_params
+          raise ArgumentError, "Tried to filter for declared parameters but none exist." unless declared_params
 
           declared_params
         end
@@ -143,7 +143,7 @@ module Grape
       # options. `:include_parent_namespaces` defaults to true, hence must be set to false if
       # you want only to return params declared against the current/target endpoint.
       def declared(*)
-        raise MethodNotYetAvailable, '#declared is not available prior to parameter validation.'
+        raise MethodNotYetAvailable, "#declared is not available prior to parameter validation."
       end
 
       # The API version as specified in the URL.
@@ -167,11 +167,11 @@ module Grape
         status = self.status(status || namespace_inheritable(:default_error_status))
         headers = additional_headers.present? ? header.merge(additional_headers) : header
         throw :error,
-              message: message,
-              status: status,
-              headers: headers,
-              backtrace: backtrace,
-              original_exception: original_exception
+          message: message,
+          status: status,
+          headers: headers,
+          backtrace: backtrace,
+          original_exception: original_exception
       end
 
       # Redirect to a new url.
@@ -184,15 +184,15 @@ module Grape
         if permanent
           status 301
           body_message ||= "This resource has been moved permanently to #{url}."
-        elsif http_version == 'HTTP/1.1' && !request.get?
+        elsif http_version == "HTTP/1.1" && !request.get?
           status 303
           body_message ||= "An alternate resource is located at #{url}."
         else
           status 302
           body_message ||= "This resource has been moved temporarily to #{url}."
         end
-        header 'Location', url
-        content_type 'text/plain'
+        header "Location", url
+        content_type "text/plain"
         body body_message
       end
 
@@ -222,7 +222,7 @@ module Grape
             200
           end
         else
-          raise ArgumentError, 'Status code must be Integer or Symbol.'
+          raise ArgumentError, "Status code must be Integer or Symbol."
         end
       end
 
@@ -249,7 +249,7 @@ module Grape
         if value
           @body = value
         elsif value == false
-          @body = ''
+          @body = ""
           status 204
         else
           instance_variable_defined?(:@body) ? @body : nil
@@ -283,7 +283,7 @@ module Grape
           file_body = Grape::ServeStream::FileBody.new(value)
           @stream = Grape::ServeStream::StreamResponse.new(file_body)
         elsif !value.is_a?(NilClass)
-          raise ArgumentError, 'Argument must be a file path'
+          raise ArgumentError, "Argument must be a file path"
         else
           stream
         end
@@ -308,15 +308,15 @@ module Grape
         return if value.nil? && @stream.nil?
 
         header Rack::CONTENT_LENGTH, nil
-        header 'Transfer-Encoding', nil
-        header Rack::CACHE_CONTROL, 'no-cache' # Skips ETag generation (reading the response up front)
+        header "Transfer-Encoding", nil
+        header Rack::CACHE_CONTROL, "no-cache" # Skips ETag generation (reading the response up front)
         if value.is_a?(String)
           file_body = Grape::ServeStream::FileBody.new(value)
           @stream = Grape::ServeStream::StreamResponse.new(file_body)
         elsif value.respond_to?(:each)
           @stream = Grape::ServeStream::StreamResponse.new(value)
         elsif !value.is_a?(NilClass)
-          raise ArgumentError, 'Stream object must respond to :each.'
+          raise ArgumentError, "Stream object must respond to :each."
         else
           @stream
         end
@@ -338,23 +338,23 @@ module Grape
       #       admin: current_user.admin?
       #   end
       def present(*args)
-        options = args.count > 1 ? args.extract_options! : {}
+        options = (args.count > 1) ? args.extract_options! : {}
         key, object = if args.count == 2 && args.first.is_a?(Symbol)
-                        args
-                      else
-                        [nil, args.first]
-                      end
+          args
+        else
+          [nil, args.first]
+        end
         entity_class = entity_class_for_obj(object, options)
 
         root = options.delete(:root)
 
         representation = if entity_class
-                           entity_representation_for(entity_class, object, options)
-                         else
-                           object
-                         end
+          entity_representation_for(entity_class, object, options)
+        else
+          object
+        end
 
-        representation = { root => representation } if root
+        representation = {root => representation} if root
 
         if key
           representation = (body || {}).merge(key => representation)
@@ -393,10 +393,10 @@ module Grape
         if entity_class.nil?
           # entity class not explicitly defined, auto-detect from relation#klass or first object in the collection
           object_class = if object.respond_to?(:klass)
-                           object.klass
-                         else
-                           object.respond_to?(:first) ? object.first.class : object.class
-                         end
+            object.klass
+          else
+            object.respond_to?(:first) ? object.first.class : object.class
+          end
 
           object_class.ancestors.each do |potential|
             entity_class ||= (namespace_stackable_with_hash(:representations) || {})[potential]
@@ -411,13 +411,13 @@ module Grape
       # @return the representation of the given object as done through
       #   the given entity_class.
       def entity_representation_for(entity_class, object, options)
-        embeds = { env: env }
+        embeds = {env: env}
         embeds[:version] = env[Grape::Env::API_VERSION] if env.key?(Grape::Env::API_VERSION)
         entity_class.represent(object, **embeds, **options)
       end
 
       def http_version
-        env.fetch('HTTP_VERSION') { env[Rack::SERVER_PROTOCOL] }
+        env.fetch("HTTP_VERSION") { env[Rack::SERVER_PROTOCOL] }
       end
 
       def api_format(format)

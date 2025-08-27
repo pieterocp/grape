@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-require 'grape'
-require 'benchmark/memory'
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
+require "grape"
+require "benchmark/memory"
 
 class VotingApi < Grape::API
   logger Logger.new($stdout)
@@ -13,7 +13,7 @@ class VotingApi < Grape::API
     end
   end
 
-  namespace 'votes' do
+  namespace "votes" do
     get do
       logger
     end
@@ -28,18 +28,18 @@ class CommentAPI < Grape::API
   mount VotingApi
 end
 
-env = Rack::MockRequest.env_for('/votes', method: Rack::GET)
+env = Rack::MockRequest.env_for("/votes", method: Rack::GET)
 
 Benchmark.memory do |api|
   calls = 1000
 
-  api.report('using Array') do
+  api.report("using Array") do
     VotingApi.instance_variable_set(:@setup, [])
     calls.times { PostApi.call(env) }
     puts " setup size: #{VotingApi.instance_variable_get(:@setup).size}"
   end
 
-  api.report('using Set') do
+  api.report("using Set") do
     VotingApi.instance_variable_set(:@setup, Set.new)
     calls.times { PostApi.call(env) }
     puts " setup size: #{VotingApi.instance_variable_get(:@setup).size}"

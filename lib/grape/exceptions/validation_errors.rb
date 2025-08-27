@@ -3,8 +3,8 @@
 module Grape
   module Exceptions
     class ValidationErrors < Base
-      ERRORS_FORMAT_KEY = 'grape.errors.format'
-      DEFAULT_ERRORS_FORMAT = '%<attributes>s %<message>s'
+      ERRORS_FORMAT_KEY = "grape.errors.format"
+      DEFAULT_ERRORS_FORMAT = "%<attributes>s %<message>s"
 
       include Enumerable
 
@@ -12,7 +12,7 @@ module Grape
 
       def initialize(errors: [], headers: {})
         @errors = errors.group_by(&:params)
-        super(message: full_messages.join(', '), status: 400, headers: headers)
+        super(message: full_messages.join(", "), status: 400, headers: headers)
       end
 
       def each

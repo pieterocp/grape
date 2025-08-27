@@ -11,7 +11,7 @@ describe Grape::API do
     Class.new(Grape::API) do
       format :json
       get do
-        { ok: true }
+        {ok: true}
       end
     end
   end
@@ -20,9 +20,9 @@ describe Grape::API do
     subject
   end
 
-  context 'with a global namespace function' do
-    it 'works' do
-      get '/'
+  context "with a global namespace function" do
+    it "works" do
+      get "/"
       expect(last_response.status).to eq 200
     end
   end

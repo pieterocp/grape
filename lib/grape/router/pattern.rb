@@ -11,7 +11,7 @@ module Grape
 
       def_delegators :pattern, :params
       def_delegators :to_regexp, :===
-      alias match? ===
+      alias_method :match?, :===
 
       def initialize(origin, suffix, options)
         @origin = origin
@@ -22,8 +22,8 @@ module Grape
 
       def captures_default
         to_regexp.names
-                 .delete_if { |n| DEFAULT_CAPTURES.include?(n) }
-                 .to_h { |k| [k, ''] }
+          .delete_if { |n| DEFAULT_CAPTURES.include?(n) }
+          .to_h { |k| [k, ""] }
       end
 
       private
@@ -53,11 +53,11 @@ module Grape
       end
 
       def build_path_from_pattern(pattern, anchor)
-        if pattern.end_with?('*path')
-          pattern.dup.insert(pattern.rindex('/') + 1, '?')
+        if pattern.end_with?("*path")
+          pattern.dup.insert(pattern.rindex("/") + 1, "?")
         elsif anchor
           pattern
-        elsif pattern.end_with?('/')
+        elsif pattern.end_with?("/")
           "#{pattern}?*path"
         else
           "#{pattern}/?*path"

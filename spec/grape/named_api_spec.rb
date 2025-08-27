@@ -5,17 +5,17 @@ describe Grape::API do
 
   let(:api) do
     Class.new(Grape::API) do
-      get 'test' do
-        'response'
+      get "test" do
+        "response"
       end
     end
   end
 
-  let(:name) { 'NamedAPI' }
+  let(:name) { "NamedAPI" }
 
   before { stub_const(name, api) }
 
-  it 'can access the name of the API' do
+  it "can access the name of the API" do
     expect(api_name).to eq name
   end
 end

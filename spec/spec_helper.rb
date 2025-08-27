@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'simplecov'
-require 'rubygems'
-require 'bundler'
+require "simplecov"
+require "rubygems"
+require "bundler"
 Bundler.require :default, :test
 
 Grape.deprecator.behavior = :raise
@@ -30,5 +30,5 @@ RSpec.configure do |config|
   config.before { Grape::Util::InheritableSetting.reset_global! }
 
   # Enable flags like --only-failures and --next-failure
-  config.example_status_persistence_file_path = '.rspec_status'
+  config.example_status_persistence_file_path = ".rspec_status"
 end

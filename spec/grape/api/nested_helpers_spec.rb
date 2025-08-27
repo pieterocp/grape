@@ -40,13 +40,13 @@ describe Grape::API::Helpers do
     main
   end
 
-  it 'can access helpers from a mounted resource' do
-    get '/level1', current_user: 'hello'
-    expect(last_response.body).to eq('hello')
+  it "can access helpers from a mounted resource" do
+    get "/level1", current_user: "hello"
+    expect(last_response.body).to eq("hello")
   end
 
-  it 'can access helpers from a mounted resource in a nested resource' do
-    get '/level1/level2', current_user: 'world'
-    expect(last_response.body).to eq('world')
+  it "can access helpers from a mounted resource in a nested resource" do
+    get "/level1/level2", current_user: "world"
+    expect(last_response.body).to eq("world")
   end
 end

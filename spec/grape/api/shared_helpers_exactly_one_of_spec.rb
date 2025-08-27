@@ -16,12 +16,12 @@ describe Grape::API::Helpers do
 
       params do
         requires :orderType, type: String, values: %w[food drink]
-        given orderType: ->(val) { val == 'food' } do
+        given orderType: ->(val) { val == "food" } do
           optional :pasta
           optional :pizza
           exactly_one_of :pasta, :pizza
         end
-        given orderType: ->(val) { val == 'drink' } do
+        given orderType: ->(val) { val == "drink" } do
           use :drink
         end
       end
@@ -31,11 +31,11 @@ describe Grape::API::Helpers do
     end
   end
 
-  it 'defines parameters' do
-    get '/', orderType: 'food', pizza: 'mista'
+  it "defines parameters" do
+    get "/", orderType: "food", pizza: "mista"
     expect(last_response.status).to eq 200
-    expect(last_response.body).to eq({ orderType: 'food',
-                                       pasta: nil, pizza: 'mista',
-                                       beer: nil, wine: nil }.to_json)
+    expect(last_response.body).to eq({orderType: "food",
+                                      pasta: nil, pizza: "mista",
+                                      beer: nil, wine: nil}.to_json)
   end
 end

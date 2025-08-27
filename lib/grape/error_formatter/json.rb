@@ -14,13 +14,13 @@ module Grape
           return message if message.is_a?(Hash)
           return message.as_json if message.is_a?(Exceptions::ValidationErrors)
 
-          { error: ensure_utf8(message) }
+          {error: ensure_utf8(message)}
         end
 
         def ensure_utf8(message)
           return message unless message.respond_to? :encode
 
-          message.encode('UTF-8', invalid: :replace, undef: :replace)
+          message.encode("UTF-8", invalid: :replace, undef: :replace)
         end
       end
     end

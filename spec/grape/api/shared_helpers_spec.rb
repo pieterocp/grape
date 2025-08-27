@@ -28,9 +28,9 @@ describe Grape::API::Helpers do
     subject
   end
 
-  it 'defines parameters' do
-    get '/'
+  it "defines parameters" do
+    get "/"
     expect(last_response.status).to eq 200
-    expect(last_response.body).to eq({ page: nil, size: nil }.to_json)
+    expect(last_response.body).to eq({page: nil, size: nil}.to_json)
   end
 end
