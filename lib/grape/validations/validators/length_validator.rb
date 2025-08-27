@@ -25,9 +25,12 @@ module Grape
 
           return unless param.respond_to?(:length)
 
-          return unless (!@min.nil? && param.length < @min) || (!@max.nil? && param.length > @max) || (!@is.nil? && param.length != @is)
+          length_invalid =
+            (!@min.nil? && param.length < @min) ||
+            (!@max.nil? && param.length > @max) ||
+            (!@is.nil? && param.length != @is)
 
-          raise Grape::Exceptions::Validation.new(params: [@scope.full_name(attr_name)], message: build_message)
+          raise Grape::Exceptions::Validation.new(params: [@scope.full_name(attr_name)], message: build_message) if length_invalid
         end
 
         def build_message
